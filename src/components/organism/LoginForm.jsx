@@ -1,20 +1,23 @@
-import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+
+// Resolver to integrate Zod with React Hook Form
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Molecules
 import FormField from "../molecules/FormField";
+
+// Atoms
 import AppButton from "../atoms/AppButton";
 import AlertMessage from "../atoms/Alertmessage";
 
-
-const schema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
+// Validation schema for login form
+import { loginSchema } from "../../validation/loginSchema";
 
 export default function LoginForm({ onSubmit, loading, error }) {
+
+  // React Hook Form setup with Zod validation
   const { register, handleSubmit, formState:{ errors } } =
-    useForm({ resolver: zodResolver(schema) });
+    useForm({ resolver: zodResolver(loginSchema) });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

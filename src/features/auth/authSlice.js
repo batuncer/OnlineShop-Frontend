@@ -1,8 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+
+// API base URL
 import { API_BASE } from "../../config";
+
+// Utility to get auth header with token
 import { authHeader } from "../../utils/authHeader";
 
+
+// Register user
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (form, { rejectWithValue }) => {
@@ -13,6 +19,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Login user
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (form, { rejectWithValue }) => {
@@ -23,6 +30,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Fetch current user info
 export const fetchMe = createAsyncThunk(
   "auth/me",
   async (_, { rejectWithValue }) => {

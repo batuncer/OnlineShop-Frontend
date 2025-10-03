@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+// Custom theme for the application
 export const theme = createTheme({
   palette: {
     primary: { main: "#1e88e5" },

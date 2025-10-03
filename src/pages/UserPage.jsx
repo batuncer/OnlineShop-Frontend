@@ -1,12 +1,20 @@
-import React, { useEffect } from "react";
-import { Container, Typography, Box, Button } from "@mui/material";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+// MUI components
+import { Container, Typography, Box, Button } from "@mui/material";
+
+// Import fetchMe and logout actions
 import { fetchMe, logout } from "../features/auth/authSlice";
 
 export default function UserPage() {
+  // Redux hooks
   const dispatch = useDispatch();
+
+  // Get user and token from Redux state
   const { user, token } = useSelector((s)=>s.auth);
 
+  // Fetch user details if token exists but user data is not loaded
   useEffect(()=>{
     if (token && !user) dispatch(fetchMe());
   }, [token, user, dispatch]);

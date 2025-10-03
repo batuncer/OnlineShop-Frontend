@@ -1,4 +1,4 @@
-import React from "react";
+// Atoms 
 import AppTextField from "../atoms/AppTextField";
 
 export default function FormField({ register, name, label, type="text", errors }) {
