@@ -7,7 +7,6 @@ import { API_BASE } from "../../config";
 // Utility to get auth header with token
 import { authHeader } from "../../utils/authHeader";
 
-
 // Register user
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -45,45 +44,42 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    token: localStorage.getItem("token") || null,
+    token: null,
     loading: false,
     error: null,
   },
   reducers: {
     logout: (state) => {
-      state.user = null; state.token = null;
-      localStorage.removeItem("token");
+      state.user = null;
+      state.token = null;
     },
   },
   extraReducers: (b) => {
-    b.addCase(registerUser.pending, (s)=>{s.loading=true;s.error=null;})
-     .addCase(registerUser.fulfilled, (s,a)=>{
-        s.loading=false;
-        const d=a.payload; 
-        s.token=d?.token||null;
-        s.user = d ? { username:d.username, email:d.email } : null;
-        if(s.token) localStorage.setItem("token", s.token);
-     })
-     .addCase(registerUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;})
+    b.addCase(registerUser.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(registerUser.fulfilled, (s, a) => {
+        s.loading = false;
+        const d = a.payload;
+        s.token = d?.token || null;
+        s.user = d ? { username: d.username, email: d.email } : null;
+      })
+      .addCase(registerUser.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; })
 
-     .addCase(loginUser.pending, (s)=>{s.loading=true;s.error=null;})
-     .addCase(loginUser.fulfilled, (s,a)=>{
-        s.loading=false;
-        const d=a.payload; 
-        s.token=d?.token||null;
-        console.log("loginUser.fulfilled", a.payload, d);
-        s.user = d ? { username:d.username, email:d.email } : null;
-        if(s.token) localStorage.setItem("token", s.token);
-     })
-     .addCase(loginUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;})
+      .addCase(loginUser.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(loginUser.fulfilled, (s, a) => {
+        s.loading = false;
+        const d = a.payload;
+        s.token = d?.token || null;
+        s.user = d ? { username: d.username, email: d.email } : null;
+      })
+      .addCase(loginUser.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; })
 
-     .addCase(fetchMe.pending, (s)=>{s.loading=true;s.error=null;})
-     .addCase(fetchMe.fulfilled, (s,a)=>{
-        s.loading=false;
-        const d=a.payload;
+      .addCase(fetchMe.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(fetchMe.fulfilled, (s, a) => {
+        s.loading = false;
+        const d = a.payload;
         if (d) s.user = d;
-     })
-     .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
+      })
+      .addCase(fetchMe.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; });
   },
 });
 
