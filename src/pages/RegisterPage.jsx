@@ -12,7 +12,7 @@ export default function RegisterPage() {
 
   const handleSubmit = (data) => {
     dispatch(registerUser(data)).then((res)=>{
-      if (res.meta.requestStatus === "fulfilled") navigate("/user");
+      if (res.meta.requestStatus === "fulfilled") navigate("/user/me");
     });
   };
 

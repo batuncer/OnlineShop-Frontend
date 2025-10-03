@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   const handleSubmit = (data) => {
     dispatch(loginUser(data)).then((res)=>{
-      if (res.meta.requestStatus === "fulfilled") navigate("/user");
+      if (res.meta.requestStatus === "fulfilled") navigate("/user/me");
     });
   };
 

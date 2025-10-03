@@ -27,7 +27,7 @@ export const fetchMe = createAsyncThunk(
   "auth/me",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API_BASE}/users/me`, { headers: authHeader() });
+      const res = await axios.get(`${API_BASE}/user/me`, { headers: authHeader() });
       return res.data; // { success, message, data: {id, username, email, roles} }
     } catch (e) { return rejectWithValue(e.response?.data || { message: "Fetch me failed" }); }
   }
@@ -51,7 +51,8 @@ const authSlice = createSlice({
     b.addCase(registerUser.pending, (s)=>{s.loading=true;s.error=null;})
      .addCase(registerUser.fulfilled, (s,a)=>{
         s.loading=false;
-        const d=a.payload?.data; s.token=d?.token||null;
+        const d=a.payload; 
+        s.token=d?.token||null;
         s.user = d ? { username:d.username, email:d.email } : null;
         if(s.token) localStorage.setItem("token", s.token);
      })
@@ -60,7 +61,9 @@ const authSlice = createSlice({
      .addCase(loginUser.pending, (s)=>{s.loading=true;s.error=null;})
      .addCase(loginUser.fulfilled, (s,a)=>{
         s.loading=false;
-        const d=a.payload?.data; s.token=d?.token||null;
+        const d=a.payload; 
+        s.token=d?.token||null;
+        console.log("loginUser.fulfilled", a.payload, d);
         s.user = d ? { username:d.username, email:d.email } : null;
         if(s.token) localStorage.setItem("token", s.token);
      })
@@ -69,7 +72,7 @@ const authSlice = createSlice({
      .addCase(fetchMe.pending, (s)=>{s.loading=true;s.error=null;})
      .addCase(fetchMe.fulfilled, (s,a)=>{
         s.loading=false;
-        const d=a.payload?.data;
+        const d=a.payload;
         if (d) s.user = d;
      })
      .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
