@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
-import Drawer from '@mui/material/Drawer';
+import CartDrawer from '../molecules/CartDrawer';
+
 
 const pages = ['Account', 'Home', 'Login', 'Register', 'Logout'];
 
@@ -33,6 +34,10 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
@@ -79,7 +84,7 @@ function ResponsiveAppBar() {
 
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   {auth.user ? (
-                    <Avatar alt="Baki" src="/static/images/avatar/2.jpg" />
+                    <Avatar alt={(auth.user.username).toUpperCase()} src="/static/images/avatar/2.jpg" />
                   ) : (
                     <MenuIcon style={{ color: 'white' }} />
                   )}
@@ -87,28 +92,8 @@ function ResponsiveAppBar() {
               </Box>
 
             </Tooltip>
-                  
-            <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-              {drawerOpen && (
-                <Box sx={{ width: 250 }} role="presentation" onClick={() => setDrawerOpen(false)} onKeyDown={() => setDrawerOpen(false)}>
-                  <Typography variant="h6" sx={{ p: 2 }}>Cart Items</Typography>
-                  {cart.items && cart.items.length > 0 ? (
-                    cart.items.map((item, index) => (
-                      <Box key={index} sx={{ p: 2, borderBottom: '1px solid #ccc' }}>
-                        {/* TODO: Check if the item is same product and show quantity accordingly adn if the user add same product again increase the quantity instead of adding new item */}
-                        <Typography variant="body1">{item.name}</Typography>
-                        <Typography variant="body2">Quantity: {item.quantity}</Typography>
-                        <Typography variant="body2">Price: £{item.price}</Typography>
-                        <Divider />
-                        <Typography variant="body2">Total: £{item.quantity * item.price}</Typography>
-                      </Box>
-                    ))
-                  ) : (
-                    <Typography variant="body2" sx={{ p: 2 }}>No items in cart</Typography>
-                  )}
-                </Box>
-              )}
-            </Drawer>
+
+            <CartDrawer drawerOpen={drawerOpen} cart={cart} setDrawerOpen={setDrawerOpen} />
 
             <Menu
               sx={{ mt: '45px' }}
