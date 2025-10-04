@@ -23,7 +23,7 @@ export default function LoginPage() {
   const handleSubmit = (data) => {
     // Dispatch loginUser action
     dispatch(loginUser(data)).then((res)=>{
-      if (res.meta.requestStatus === "fulfilled") navigate("/user/me");
+      if (res.meta.requestStatus === "fulfilled") navigate('/');
     });
   };
 

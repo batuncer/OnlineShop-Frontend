@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 const PublicRoute = ({ children }) => {
     const token = useSelector((s) => s.auth.token);
-    if (token) return <Navigate to="/user/me" replace />;
+    if (token) return <Navigate to="/" replace />;
     return children;
 };
 
