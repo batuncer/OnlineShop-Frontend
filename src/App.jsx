@@ -11,18 +11,17 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 
 //Organisms
-import Navbar from "./components/organism/Navbar";
-
+import Navbar from "./ui/organism/Navbar";
 
 export default function App() {
   return (
     <BrowserRouter>
-    <Navbar />
+      <Navbar />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<PublicRoute><MainPage /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Private Route */}
         <Route path="/user/me" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />

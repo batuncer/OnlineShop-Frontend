@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-// MUI components
+// MUI ui
 import { Container, Typography, Box, Link as MuiLink } from "@mui/material";
 
 // Import registerUser action
 import { registerUser } from "../features/auth/authSlice";
 // Organisms
-import RegisterForm from "../components/organism/RegisterForm";
+import RegisterForm from "../ui/organism/RegisterForm";
 
 export default function RegisterPage() {
 

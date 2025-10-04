@@ -12,6 +12,7 @@ import AlertMessage from "../atoms/Alertmessage";
 
 // Validation schema for login form
 import { loginSchema } from "../../validation/loginSchema";
+import { CircularProgress } from "@mui/material";
 
 export default function LoginForm({ onSubmit, loading, error }) {
 
@@ -25,7 +26,7 @@ export default function LoginForm({ onSubmit, loading, error }) {
       <FormField label="Password" name="password" type="password" register={register} errors={errors} />
       <AlertMessage>{error}</AlertMessage>
       <AppButton type="submit" disabled={loading} sx={{ mt: 2 }}>
-        {loading ? "Logging in..." : "Login"}
+        {loading ? <CircularProgress style={{ width: 30, height: 24 }} /> : "Login"}
       </AppButton>
     </form>
   );

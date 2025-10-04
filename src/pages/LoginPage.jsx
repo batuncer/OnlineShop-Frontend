@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../features/auth/authSlice";
 
 // Organisms
-import LoginForm from "../components/organism/LoginForm";
+import LoginForm from "../ui/organism/LoginForm";
 
 export default function LoginPage() {
 
