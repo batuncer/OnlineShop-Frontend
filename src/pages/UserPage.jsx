@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 
 // Import fetchMe and logout actions
-import { fetchMe, logout } from "../features/auth/authSlice";
+import { fetchMe, logout } from "../modules/auth/authSlice";
 
 export default function UserPage() {
   // Redux hooks

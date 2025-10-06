@@ -12,7 +12,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import AdbIcon from '@mui/icons-material/Adb';
+import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 
@@ -44,7 +44,7 @@ function Navbar() {
     <AppBar position="static" style={{ backgroundColor: 'maroon' }}>
       <Container maxWidth="xl">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <EmojiFoodBeverageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography variant="h6" noWrap component="a" href="/"
             sx={{
               mr: 2,

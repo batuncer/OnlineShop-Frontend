@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Container, Typography, Box, Link as MuiLink } from "@mui/material";
 
 // Import registerUser action
-import { registerUser } from "../features/auth/authSlice";
+import { registerUser } from "../modules/auth/authSlice";
 // Organisms
 import RegisterForm from "../ui/organism/RegisterForm";
 

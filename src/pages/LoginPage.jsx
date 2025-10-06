@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 // Import loginUser action
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser } from "../modules/auth/authSlice";
 
 // Organisms
 import LoginForm from "../ui/organism/LoginForm";

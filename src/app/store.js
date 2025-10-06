@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 // Slice
-import authReducer from "../features/auth/authSlice";
-import cartReducer from "../features/cart/cartSlice";
+import authReducer from "../modules/auth/authSlice";
+import cartReducer from "../modules/cart/cartSlice";
 
 // Redux Persist
 import {persistReducer, persistStore, FLUSH, PAUSE, PERSIST,  PURGE, REGISTER, REHYDRATE } from "redux-persist";
