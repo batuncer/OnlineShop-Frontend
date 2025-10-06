@@ -3,22 +3,34 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 // Slice
 import authReducer from "../modules/auth/authSlice";
 import cartReducer from "../modules/cart/cartSlice";
+import productReducer from "../modules/product/productSlice";
 
 // Redux Persist
-import {persistReducer, persistStore, FLUSH, PAUSE, PERSIST,  PURGE, REGISTER, REHYDRATE } from "redux-persist";
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
 
+// Use local storage
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 // Combine reducers
 const rootReducer = combineReducers({
-    auth: authReducer,
-    cart: cartReducer,
+  auth: authReducer,
+  cart: cartReducer,
+  product: productReducer,
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: ['auth', 'cart'], // only auth and cart will be persisted
+  whitelist: ["auth", "cart"], // only auth and cart will be persisted
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -34,4 +46,3 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-
