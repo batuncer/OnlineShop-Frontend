@@ -19,6 +19,7 @@ import Badge from '@mui/material/Badge';
 // Molecules
 import CartDrawer from '../molecules/CartDrawer';
 import UserMenu from '../molecules/UserMenu';
+import { clearCart, removeItem } from '../../modules/cart/cartSlice';
 
 function Navbar() {
   const auth = useSelector((state) => state.auth);
@@ -39,6 +40,27 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  //handle clear cart
+  const handleClearCart = () => {
+    // Clear the entire cart
+    dispatch(clearCart({ productId: cart.items[0]?.id, quantity: 1 }));
+  }
+
+  //handle checkout
+  const handleCheckout = () => {
+    // Proceed to checkout
+    navigate('/checkout');
+    setDrawerOpen(false); // Close the drawer after navigating
+  }
+
+  //handle remove from cart
+  const handleRemoveFromCart = () => {
+    // Remove one item from the cart
+    dispatch(removeItem({ productId: cart.items[0]?.id, quantity: 1 }));
+  }
+
+  console.log("Cart state in Navbar:", cart);
 
   return (
     <AppBar position="static" style={{ backgroundColor: 'maroon' }}>
@@ -78,8 +100,8 @@ function Navbar() {
               </Box>
 
             </Tooltip>
-
-            <CartDrawer drawerOpen={drawerOpen} cart={cart} setDrawerOpen={setDrawerOpen} />
+      
+            <CartDrawer drawerOpen={drawerOpen} cart={cart} setDrawerOpen={setDrawerOpen} handleRemoveFromCart={handleClearCart} handleCheckout={handleCheckout} />
 
             <UserMenu
               anchorElUser={anchorElUser}
