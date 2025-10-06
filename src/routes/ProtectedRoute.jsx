@@ -6,6 +6,6 @@ export default function ProtectedRoute({ children }) {
   const token = useSelector((s)=>s.auth.token);
 
   // If no token, redirect to login
-  if (!token) return <Navigate to="/login" replace />;
+  if (!token) return <Navigate to="/" replace />;
   return children;
 }

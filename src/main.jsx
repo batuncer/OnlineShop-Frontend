@@ -9,7 +9,7 @@ import { persistor, store } from "./app/store";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 
 // Custom Theme
-import { theme } from "./design/theme";
+import { theme } from "./theme/theme";
 
 // Redux Persist
 import { PersistGate } from "redux-persist/integration/react";

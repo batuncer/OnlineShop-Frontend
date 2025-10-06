@@ -50,36 +50,37 @@ const authSlice = createSlice({
   },
   reducers: {
     logout: (state) => {
-      state.user = null;
+      state.user = null; 
       state.token = null;
+
     },
   },
   extraReducers: (b) => {
-    b.addCase(registerUser.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(registerUser.fulfilled, (s, a) => {
-        s.loading = false;
-        const d = a.payload;
-        s.token = d?.token || null;
-        s.user = d ? { username: d.username, email: d.email } : null;
-      })
-      .addCase(registerUser.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; })
+    b.addCase(registerUser.pending, (s)=>{s.loading=true;s.error=null;})
+     .addCase(registerUser.fulfilled, (s,a)=>{
+        s.loading=false;
+        const d=a.payload?.data; 
+        s.token=d?.token||null;
+        s.user = d ? { username:d.username, email:d.email } : null;
+     })
+     .addCase(registerUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Register failed";})
 
-      .addCase(loginUser.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(loginUser.fulfilled, (s, a) => {
-        s.loading = false;
-        const d = a.payload;
-        s.token = d?.token || null;
-        s.user = d ? { username: d.username, email: d.email } : null;
-      })
-      .addCase(loginUser.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; })
+     .addCase(loginUser.pending, (s)=>{s.loading=true;s.error=null;})
+     .addCase(loginUser.fulfilled, (s,a)=>{
+        s.loading=false;
+        const d=a.payload?.data
+        s.token=d?.token||null;
+        s.user = d ? { username:d.username, email:d.email } : null;
+     })
+     .addCase(loginUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Login failed";})
 
-      .addCase(fetchMe.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(fetchMe.fulfilled, (s, a) => {
-        s.loading = false;
-        const d = a.payload;
+     .addCase(fetchMe.pending, (s)=>{s.loading=true;s.error=null;})
+     .addCase(fetchMe.fulfilled, (s,a)=>{
+        s.loading=false;
+        const d=a.payload;
         if (d) s.user = d;
-      })
-      .addCase(fetchMe.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message; });
+     })
+     .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
   },
 });
 

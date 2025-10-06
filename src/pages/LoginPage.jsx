@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 // Import loginUser action
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser } from "../modules/auth/authSlice";
 
 // Organisms
-import LoginForm from "../components/organism/LoginForm";
+import LoginForm from "../ui/organism/LoginForm";
 
 export default function LoginPage() {
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
   const handleSubmit = (data) => {
     // Dispatch loginUser action
     dispatch(loginUser(data)).then((res)=>{
-      if (res.meta.requestStatus === "fulfilled") navigate("/user/me");
+      if (res.meta.requestStatus === "fulfilled") navigate('/');
     });
   };
 
