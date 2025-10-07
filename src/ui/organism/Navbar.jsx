@@ -60,7 +60,6 @@ function Navbar() {
     dispatch(removeItem({ productId: cart.items[0]?.id, quantity: 1 }));
   }
 
-  console.log("Cart state in Navbar:", cart);
 
   return (
     <AppBar position="static" style={{ backgroundColor: 'maroon' }}>
