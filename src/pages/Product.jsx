@@ -27,9 +27,13 @@ const Product = () => {
     }
   }, [dispatch, productId]);
 
-  const handleAddToCart = (product) => {
-    dispatch(addItem(product));
-  };
+ 
+const handleAddToCart = (product) => {
+  dispatch(addItem({
+    name: product.typeName,
+    price: product.priceGbp,
+  }));
+};
 
   // Get the image source based on the product type
   const getImage = () => {
@@ -42,6 +46,8 @@ const Product = () => {
   const imageSrc = getImage();
 
   if (!product) return null;
+
+  console.log("Product state:", product);
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -63,7 +69,7 @@ const Product = () => {
             sx={{
               height: 255,
               width: 255,
-              objectFit: "cover", // or 'contain' depending on your preference
+              objectFit: "cover",
             }}
           />
           <Typography variant="h5">{product.product.name}</Typography>
@@ -77,7 +83,7 @@ const Product = () => {
             Category: {product.product.category}
           </Typography>
           <Typography variant="body2" sx={{ marginTop: 1 }}>
-            Supplier: {product.product.supplierId}{" "}
+            Supplier: {product.product.supplierId}
             {/* gonna implement name later when we have supplier data */}
           </Typography>
           <Typography variant="body2" sx={{ marginTop: 1 }}>
