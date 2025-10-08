@@ -6,12 +6,14 @@ import RegisterPage from "./pages/RegisterPage";
 import UserPage from "./pages/UserPage";
 import MainPage from "./pages/MainPage";
 import Product from "./pages/Product";
+import CheckOutPage from "./pages/CheckOutPage";
 
 // Routes
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 //Organisms
 import Navbar from "./ui/organism/Navbar";
+
 
 export default function App() {
   return (
@@ -23,6 +25,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/products/:id" element={<Product />} />
+        <Route path="/checkout" element={<CheckOutPage />} />
 
         {/* Private Route */}
         <Route path="/user/me" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />

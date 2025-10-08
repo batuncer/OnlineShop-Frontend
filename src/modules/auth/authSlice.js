@@ -61,7 +61,7 @@ const authSlice = createSlice({
         s.loading=false;
         const d=a.payload?.data; 
         s.token=d?.token||null;
-        s.user = d ? { username:d.username, email:d.email } : null;
+        s.user = d ? { username:d.username, email:d.email, id:d.userId, role: d.role } : null;
      })
      .addCase(registerUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Register failed";})
 
@@ -70,7 +70,7 @@ const authSlice = createSlice({
         s.loading=false;
         const d=a.payload?.data
         s.token=d?.token||null;
-        s.user = d ? { username:d.username, email:d.email } : null;
+        s.user = d ? { username:d.username, email:d.email, id:d.userId, role: d.role } : null;
      })
      .addCase(loginUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Login failed";})
 
@@ -78,7 +78,7 @@ const authSlice = createSlice({
      .addCase(fetchMe.fulfilled, (s,a)=>{
         s.loading=false;
         const d=a.payload;
-        if (d) s.user = d;
+        if (d) s.user = { username:d.username, email:d.email, id:d.id, role: d.role };
      })
      .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
   },
