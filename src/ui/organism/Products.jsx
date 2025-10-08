@@ -39,7 +39,7 @@ const Products = () => {
     navigate(`/products/${productId}`);
   };
 
-  console.log("Products state:", products);
+  console.log("Products state:", products.products);
 
   if (products.loading) return <Typography>Loading...</Typography>;
   if (products.error) return <Typography>Error: {products.error}</Typography>;

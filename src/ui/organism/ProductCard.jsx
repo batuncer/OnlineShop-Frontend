@@ -4,6 +4,7 @@ import coffeeImage from "../../assets/coffeImage.webp";
 
 //MUI
 import CardActions from "@mui/material/CardActions";
+import { CardActionArea, Stack } from "@mui/material";
 import {
   Button,
   Card,
@@ -25,30 +26,29 @@ const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
   const imageSrc = getImage();
 
   return (
-    <Card sx={{ width: 345, border: "1px solid red" }}>
-      <CardMedia
-        component="img"
-        alt={product.name}
-        image={imageSrc}
-        sx={{
-          height: 255,
-          width: "100%",
-          objectFit: "cover", // or 'contain' depending on your preference
-        }}
-      />
-      <CardContent>
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          onClick={handleCardClick}
-        >
-          {product.name}
-        </Typography>
-        <Typography variant="h6" color="text.primary" sx={{ marginTop: 1 }}>
-          £{product.price.toFixed(2)}
-        </Typography>
-      </CardContent>
+    <Card sx={{ width: 345, border: "1px solid brown" }}>
+      <CardActionArea>
+        <Stack onClick={handleCardClick}>
+          <CardMedia
+            component="img"
+            alt={product.name}
+            image={imageSrc}
+            sx={{
+              height: 255,
+              width: "100%",
+              objectFit: "cover", 
+            }}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {product.name}
+            </Typography>
+            <Typography variant="h6" color="text.primary" sx={{ marginTop: 1 }}>
+              £{product.price.toFixed(2)}
+            </Typography>
+          </CardContent>
+        </Stack>
+      </CardActionArea>
       <CardActions>
         <Button size="small" onClick={handleAddToBasket}>
           Add to Basket
