@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { current } from "@reduxjs/toolkit";
 
 const CheckOutPage = () => {
   const dispatch = useDispatch();
@@ -33,30 +32,30 @@ const CheckOutPage = () => {
     }
   }, [items, dispatch]);
 
-//   const onSubmit = () => {
-//     if (!user) {
-//       setAuthWarning(true);
-//       return;
-//     }
+  const onSubmit = () => {
+    if (!user) {
+      setAuthWarning(true);
+      return;
+    }
 
-//     const orderData = {
-//       userId: user.id,
-//       items: preview
-//         ? preview.items.map((i) => ({
-//             productId: i.productId,
-//             quantity: i.quantity,
-//           }))
-//         : [],
-//       totalPrice: preview ? preview.totalPrice : 0,
-//       shippingCost: preview ? preview.shippingCost : 0,
-//       createdAt: new Date().toISOString(),
-//     };
+    const orderData = {
+      userId: user.id,
+      items: preview
+        ? preview.items.map((i) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          }))
+        : [],
+      totalPrice: preview ? preview.totalPrice : 0,
+      shippingCost: preview ? preview.shippingCost : 0,
+      createdAt: new Date().toISOString(),
+    };
 
-//     //dispatch
-//     dispatch(createOrder({orderData, userId}));
+    //dispatch
+    dispatch(createOrder({orderData, userId}));
 
-//     setOpenModal(false);
-//   };
+    setOpenModal(false);
+  };
 
   useEffect(() => {
     if (successMessage) {
@@ -120,7 +119,7 @@ const CheckOutPage = () => {
             <Button
               variant="contained"
               onClick={() => setOpenModal(true)}
-              disabled={loading || !user}
+              disabled={loading }
             >
               Place Order
             </Button>

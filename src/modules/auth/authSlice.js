@@ -5,7 +5,7 @@ import axios from "axios";
 import { API_BASE } from "../../config";
 
 // Utility to get auth header with token
-import { authHeader } from "../../utils/authHeader";
+import { authHeader } from "../../utils/authHeader"
 
 // Register user
 export const registerUser = createAsyncThunk(
@@ -23,7 +23,8 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (form, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API_BASE}/auth/login`, form);
+      const headers = authHeader(true);
+      const res = await axios.post(`${API_BASE}/auth/login`, form, { headers });
       return res.data;
     } catch (e) { return rejectWithValue(e.response?.data || { message: "Login failed" }); }
   }
@@ -34,7 +35,9 @@ export const fetchMe = createAsyncThunk(
   "auth/me",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${API_BASE}/user/me`, { headers: authHeader() });
+      const headers = authHeader(true);
+      const res = await axios.get(`${API_BASE}/user/me`, { headers });
+      console.log(res.data);
       return res.data; // { success, message, data: {id, username, email, roles} }
     } catch (e) { return rejectWithValue(e.response?.data || { message: "Fetch me failed" }); }
   }
@@ -70,6 +73,7 @@ const authSlice = createSlice({
         s.loading=false;
         const d=a.payload?.data
         s.token=d?.token||null;
+        console.log("Login successful, token:", s.token);
         s.user = d ? { username:d.username, email:d.email, id:d.userId, role: d.role } : null;
      })
      .addCase(loginUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Login failed";})
@@ -78,6 +82,7 @@ const authSlice = createSlice({
      .addCase(fetchMe.fulfilled, (s,a)=>{
         s.loading=false;
         const d=a.payload;
+        console.log(d);
         if (d) s.user = { username:d.username, email:d.email, id:d.id, role: d.role };
      })
      .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});

@@ -12,20 +12,24 @@ export default function UserPage() {
   const dispatch = useDispatch();
 
   // Get user and token from Redux state
-  const { user, token } = useSelector((s)=>s.auth);
+  const { user, token, loading } = useSelector((s)=>s.auth);
 
-  // Fetch user details if token exists but user data is not loaded
+  // Fetch user details if token exists
   useEffect(()=>{
-    if (token && !user) dispatch(fetchMe());
-  }, [token, user, dispatch]);
+    if(!token) return;
+    (!user) && dispatch(fetchMe());
+ 
+  }, [ token, dispatch]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 6 }}>
       <Typography variant="h4" gutterBottom>User Page</Typography>
+      {loading && <Typography>Loading user details...</Typography>}
       {user ? (
         <Box sx={{ mt: 2 }}>
           <Typography><b>Username:</b> {user.username}</Typography>
           <Typography><b>Email:</b> {user.email}</Typography>
+          <Typography><b>Role:</b> {user.role}</Typography>
           <Button sx={{ mt: 2 }} variant="outlined" onClick={()=>dispatch(logout())}>
             Logout
           </Button>

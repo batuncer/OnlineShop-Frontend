@@ -24,8 +24,8 @@ export default function LoginForm({ onSubmit, loading, error }) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormField label="Username" name="username" register={register} errors={errors} />
       <FormField label="Password" name="password" type="password" register={register} errors={errors} />
-      <AlertMessage>{error}</AlertMessage>
       <AppButton type="submit" disabled={loading} sx={{ mt: 2 }}>
+        {error && <AlertMessage severity="error" message={error} />}
         {loading ? <CircularProgress style={{ width: 30, height: 24 }} /> : "Login"}
       </AppButton>
     </form>

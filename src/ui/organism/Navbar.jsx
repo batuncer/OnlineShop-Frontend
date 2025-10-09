@@ -54,11 +54,11 @@ function Navbar() {
     setDrawerOpen(false); // Close the drawer after navigating
   }
 
-  //handle remove from cart
-  const handleRemoveFromCart = () => {
-    // Remove one item from the cart
-    dispatch(removeItem({ productId: cart.items[0]?.id, quantity: 1 }));
-  }
+  // //handle remove from cart
+  // const handleRemoveFromCart = () => {
+  //   // Remove one item from the cart
+  //   dispatch(removeItem({ productId: cart.items[0]?.id, quantity: 1 }));
+  // }
 
 
   return (
