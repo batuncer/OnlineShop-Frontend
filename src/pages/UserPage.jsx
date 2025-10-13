@@ -12,14 +12,15 @@ export default function UserPage() {
   const dispatch = useDispatch();
 
   // Get user and token from Redux state
-  const { user, token, loading } = useSelector((s)=>s.auth);
+  const { user, loading } = useSelector((s)=>s.auth);
 
   // Fetch user details if token exists
   useEffect(()=>{
-    if(!token) return;
-    (!user) && dispatch(fetchMe());
+    dispatch(fetchMe());
  
-  }, [ token, dispatch]);
+  }, [dispatch]);
+
+  console.log("UserPage render, user:", user, "loading:", loading);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 6 }}>

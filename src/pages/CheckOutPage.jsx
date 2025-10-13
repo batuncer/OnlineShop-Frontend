@@ -5,7 +5,7 @@ import { createOrder, fetchOrderPreview } from "../modules/order/orderSlice";
 import { clearCart } from "../modules/cart/cartSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 
 const CheckOutPage = () => {
@@ -32,28 +32,32 @@ const CheckOutPage = () => {
     }
   }, [items, dispatch]);
 
+  const orderData = useMemo(() => {
+    if (!items || items.length === 0) {
+      return null;
+    }
+    
+    return {
+      items: items.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    };
+  }, [items]);
+
   const onSubmit = () => {
     if (!user) {
       setAuthWarning(true);
       return;
     }
-
-    const orderData = {
-      userId: user.id,
-      items: preview
-        ? preview.items.map((i) => ({
-            productId: i.productId,
-            quantity: i.quantity,
-          }))
-        : [],
-      totalPrice: preview ? preview.totalPrice : 0,
-      shippingCost: preview ? preview.shippingCost : 0,
-      createdAt: new Date().toISOString(),
-    };
-
-    //dispatch
-    dispatch(createOrder({orderData, userId}));
-
+    
+    // Adding validation before dispatching
+    if (!orderData || !orderData.items || orderData.items.length === 0) {
+      error("No items in the cart to place an order.");
+      return;
+    }
+    
+    dispatch(createOrder(orderData));
     setOpenModal(false);
   };
 
@@ -119,7 +123,7 @@ const CheckOutPage = () => {
             <Button
               variant="contained"
               onClick={() => setOpenModal(true)}
-              disabled={loading }
+              disabled={loading}
             >
               Place Order
             </Button>
@@ -155,7 +159,7 @@ const CheckOutPage = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleSubmit(onSubmit)}
+              onClick={onSubmit}
               sx={{ mr: 2 }}
             >
               Confirm
