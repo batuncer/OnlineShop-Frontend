@@ -114,7 +114,7 @@ export default function MainPage() {
         </Box>
 
         {/* Features Section */}
- <Box sx={{ mx: { xs: 2, md: 32 }, mt: 8, mb: 6 }}>
+        <Box sx={{ mx: { xs: 2, md: 32 }, mt: 8, mb: 6 }}>
           <Typography
             variant="h4"
             component="h2"

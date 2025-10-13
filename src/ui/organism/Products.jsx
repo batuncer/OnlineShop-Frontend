@@ -95,7 +95,7 @@ const Products = () => {
     );
   }
 
-  // FIXED: Extract data from the correct structure - products.content (not products.products.data.content)
+
   const productList = products?.content || [];
   const totalPages = products?.totalPages || 0;
   const totalElements = products?.totalElements || 0;
@@ -155,7 +155,7 @@ const Products = () => {
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
                 count={totalPages}
-                page={currentPageNumber + 1} // Use the actual current page from API response
+                page={currentPageNumber + 1} 
                 onChange={handlePageChange}
                 color="primary"
                 size="large"

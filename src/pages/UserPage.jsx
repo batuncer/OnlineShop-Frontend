@@ -57,9 +57,9 @@ export default function UserPage() {
   }, [dispatch]);
 
   const cancelOrder = (orderId) => {
-    // Dispatch an action to cancel the order
+    // Dispatch an action to cancel the order . it will be implemented in the future after backend is ready
     console.log(`Cancel order with ID: ${orderId}`);
-    // You can implement the actual cancellation logic here
+
   };
 
   console.log("User orders from state:", orderList);

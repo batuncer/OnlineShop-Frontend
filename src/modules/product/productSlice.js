@@ -64,7 +64,6 @@ const productSlice = createSlice({
         .addCase(fetchProducts.fulfilled, (state, action) => {
             state.loading = false;
             state.products = action.payload.data;
-            // Update pageInfo with response data
             if (action.payload.pageInfo) {
                 state.pageInfo = {
                     ...state.pageInfo,
