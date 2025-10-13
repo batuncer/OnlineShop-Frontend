@@ -16,10 +16,6 @@ export const orderPreviewSchema = z.object({
 
 // Complete order schema
 export const orderSchema = z.object({
-    userId: z.string().min(1, "User ID is required"),
     items: z.array(orderItemSchema).min(1, "At least one item is required"),
-    totalPrice: z.number().min(0, "Total price must be non-negative"),
-    shippingCost: z.number().min(0, "Shipping cost must be non-negative"),
-    createdAt: z.string().optional(),
 });
 

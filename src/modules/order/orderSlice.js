@@ -4,7 +4,10 @@ import axios from "axios";
 // API base URL
 import { API_BASE } from "../../config";
 
+// Utility to get auth header with token
+import { authHeader } from "../../utils/authHeader"
 
+// Fetch order preview
 export const fetchOrderPreview = createAsyncThunk(
   "order/preview",
   async (items, { rejectWithValue }) => {
@@ -30,13 +33,24 @@ export const fetchOrderPreview = createAsyncThunk(
   }
 );
 
+// Create order
 export const createOrder = createAsyncThunk(
   "order/create",
-  async ({orderData}, { rejectWithValue }) => {
+  async (orderData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API_BASE}/order/create`, {orderData}, { headers: authHeader() });
+      const requestData = {
+        orderItems: orderData.items 
+      };
+      
+      console.log("Sending to backend:", requestData);
+      
+      const res = await axios.post(`${API_BASE}/order/create`, requestData, { 
+        headers: authHeader() 
+      });
       return res.data; // { success, message, data }
-    } catch (e) { return rejectWithValue(e.response?.data || { message: "Place order failed" }); }
+    } catch (e) { 
+      return rejectWithValue(e.response?.data || { message: "Place order failed" }); 
+    }
   }
 );
 
@@ -63,7 +77,7 @@ const orderSlice = createSlice({
          .addCase(fetchOrderPreview.fulfilled, (s, a) => { s.loading = false; s.preview = a.payload.data; })
          .addCase(fetchOrderPreview.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message || "Failed to fetch order preview"; })
          .addCase(createOrder.pending, (s) => { s.loading = true; s.error = null; s.successMessage = null; })
-         .addCase(createOrder.fulfilled, (s, a) => { s.loading = false; s.orderResult = a.payload.data; s.successMessage = a.payload.message; })
+         .addCase(createOrder.fulfilled, (s, a) => { s.loading = false; s.orderResult = a.payload.data; s.successMessage = a.payload.message; console.log("Order placed successfully:", a.payload.data); })
          .addCase(createOrder.rejected, (s, a) => { s.loading = false; s.error = a.payload?.message || "Failed to place order"; });
     }
 });
