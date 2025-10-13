@@ -60,6 +60,8 @@ function Navbar() {
   //   dispatch(removeItem({ productId: cart.items[0]?.id, quantity: 1 }));
   // }
 
+  console.log("Navbar render, auth:", auth, "cart items:", cart.items);
+
 
   return (
     <AppBar position="static" style={{ backgroundColor: 'maroon' }}>

@@ -82,8 +82,8 @@ const authSlice = createSlice({
      .addCase(fetchMe.fulfilled, (s,a)=>{
         s.loading=false;
         const d=a.payload;
-        console.log(d);
-        if (d) s.user = { username:d.username, email:d.email, id:d.id, role: d.role };
+        console.log("fetchMe successful, user data:", d);
+        if (d) s.user = { username:d.data.username, email:d.data.email, id:d.data.id, role: d.data.role };
      })
      .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
   },
