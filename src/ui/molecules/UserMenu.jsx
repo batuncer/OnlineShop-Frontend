@@ -1,4 +1,21 @@
-import { Menu, MenuItem, Typography } from "@mui/material";
+import { 
+  Menu, 
+  MenuItem, 
+  Typography, 
+  Divider, 
+  ListItemIcon,
+  Box,
+  Avatar,
+  Chip
+} from "@mui/material";
+import {
+  Home as HomeIcon,
+  Person as PersonIcon,
+  Login as LoginIcon,
+  PersonAdd as RegisterIcon,
+  Logout as LogoutIcon,
+  AccountCircle as AccountIcon
+} from "@mui/icons-material";
 
 const UserMenu = ({
   anchorElUser,
@@ -7,21 +24,74 @@ const UserMenu = ({
   dispatch,
   navigate,
 }) => {
-  // Menu items
-  const pages = ["Account", "Home", "Login", "Register", "Logout"];
+  // Menu items with icons
+  const menuItems = [
+    { 
+      name: "Home", 
+      route: "/", 
+      icon: <HomeIcon />, 
+      showWhen: "always",
+      color: "#2196f3"
+    },
+    { 
+      name: "Account", 
+      route: "/user/me", 
+      icon: <AccountIcon />, 
+      showWhen: "authenticated",
+      color: "#4caf50"
+    },
+    { 
+      name: "Login", 
+      route: "/login", 
+      icon: <LoginIcon />, 
+      showWhen: "unauthenticated",
+      color: "#ff9800"
+    },
+    { 
+      name: "Register", 
+      route: "/register", 
+      icon: <RegisterIcon />, 
+      showWhen: "unauthenticated",
+      color: "#9c27b0"
+    },
+    { 
+      name: "Logout", 
+      route: "/", 
+      icon: <LogoutIcon />, 
+      showWhen: "authenticated",
+      color: "#f44336",
+      isLogout: true
+    }
+  ];
 
-  // Routes mapping
-  const routes = {
-    Home: "/",
-    Account: "/user/me",
-    Login: "/login",
-    Register: "/register",
-    Logout: "/",
+  const handleMenuItemClick = (item) => {
+    if (item.isLogout) {
+      dispatch({ type: "auth/logout" });
+      navigate("/");
+    } else {
+      navigate(item.route, item.name === "Home" ? { replace: true } : {});
+    }
+    handleCloseUserMenu();
+  };
+
+  const shouldShowItem = (item) => {
+    if (item.showWhen === "always") return true;
+    if (item.showWhen === "authenticated") return !!auth.user;
+    if (item.showWhen === "unauthenticated") return !auth.user;
+    return false;
   };
 
   return (
     <Menu
-      sx={{ mt: "45px" }}
+      sx={{ 
+        mt: "45px",
+        '& .MuiPaper-root': {
+          borderRadius: 3,
+          minWidth: 200,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          border: '1px solid rgba(0,0,0,0.05)'
+        }
+      }}
       id="menu-appbar"
       anchorEl={anchorElUser}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -30,53 +100,92 @@ const UserMenu = ({
       open={Boolean(anchorElUser)}
       onClose={handleCloseUserMenu}
     >
-      {pages.map((setting) => {
-        if (setting === "Home") {
-          return (
-            <MenuItem
-              key={setting}
-              onClick={() => {
-                handleCloseUserMenu();
-                navigate(routes[setting], { replace: true });
-              }}
-            >
-              <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
-            </MenuItem>
-          );
-        }
+      {/* User Info Header */}
+      {auth.user && (
+        <>
+          <Box sx={{ px: 3, py: 2, bgcolor: '#f5f5f5' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Avatar 
+                sx={{ 
+                  bgcolor: '#8B4513', 
+                  width: 40, 
+                  height: 40,
+                  fontSize: '1rem'
+                }}
+              >
+                {auth.user.username?.charAt(0).toUpperCase()}
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {auth.user.username}
+                </Typography>
+                <Chip 
+                  label={auth.user.role || "User"} 
+                  size="small" 
+                  color="primary"
+                  sx={{ fontSize: '0.75rem' }}
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Divider />
+        </>
+      )}
 
-        if (auth.user && (setting === "Login" || setting === "Register"))
-          return null;
-        if (!auth.user && (setting === "Account" || setting === "Logout"))
-          return null;
-
-        if (setting === "Logout") {
-          return (
-            <MenuItem
-              key={setting}
-              onClick={() => {
-                dispatch({ type: "auth/logout" });
-                handleCloseUserMenu();
-                navigate("/");
-              }}
-            >
-              <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
-            </MenuItem>
-          );
-        }
-
-        return (
+      {/* Menu Items */}
+      {menuItems
+        .filter(shouldShowItem)
+        .map((item, index) => (
           <MenuItem
-            key={setting}
-            onClick={() => {
-              handleCloseUserMenu();
-              navigate(routes[setting]);
+            key={item.name}
+            onClick={() => handleMenuItemClick(item)}
+            sx={{
+              py: 1.5,
+              px: 3,
+              '&:hover': {
+                bgcolor: `${item.color}15`,
+                '& .MuiListItemIcon-root': {
+                  color: item.color
+                },
+                '& .MuiTypography-root': {
+                  color: item.color,
+                  fontWeight: 'medium'
+                }
+              },
+              transition: 'all 0.2s ease'
             }}
           >
-            <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
+            <ListItemIcon 
+              sx={{ 
+                minWidth: 40,
+                color: 'text.secondary',
+                transition: 'color 0.2s ease'
+              }}
+            >
+              {item.icon}
+            </ListItemIcon>
+            <Typography 
+              sx={{ 
+                fontSize: '0.95rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {item.name}
+            </Typography>
           </MenuItem>
-        );
-      })}
+        ))}
+
+      {/* Footer for unauthenticated users */}
+      {!auth.user && (
+        <>
+          <Divider />
+          <Box sx={{ px: 3, py: 2, bgcolor: '#f9f9f9' }}>
+            <Typography variant="caption" color="text.secondary" align="center">
+              Sign in to access more features
+            </Typography>
+          </Box>
+        </>
+      )}
     </Menu>
   );
 };

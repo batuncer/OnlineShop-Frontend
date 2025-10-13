@@ -24,7 +24,7 @@ export default function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/products/:id" element={<Product />} />
+        <Route path="/product/:id" element={<Product />} />
         <Route path="/checkout" element={<CheckOutPage />} />
 
         {/* Private Route */}
