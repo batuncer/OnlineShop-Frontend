@@ -15,6 +15,7 @@ import {
   Inventory as InventoryIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
+import UserManagement from '../ui/organism/UserManagment';
 
 
 function TabPanel(props) {
@@ -125,6 +126,10 @@ const AdminPage = () => {
             />
           </Tabs>
         </Paper>
+
+        <TabPanel value={tabValue} index={0}>
+          <UserManagement />
+        </TabPanel>
       </Container>
     </Box>
   );

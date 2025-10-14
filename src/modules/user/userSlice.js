@@ -32,9 +32,23 @@ export const getUserOrders = createAsyncThunk(
   }
 );
 
+export const fetchUsers = createAsyncThunk(
+  "admin/fetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const headers = authHeader(true);
+      const res = await axios.get(`${API_BASE}/user`, { headers });
+      return res.data; // { success, message, data: [...] }
+    } catch (e) {
+      return rejectWithValue(e.response?.data || { message: "Fetch users failed" });
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    users: [],
     user: null,
     token: null,
     loading: false,
@@ -72,8 +86,17 @@ const userSlice = createSlice({
       .addCase(getUserOrders.rejected, (s, action) => {
         s.loading = false;
         s.error = action.payload.message;
+      })
+      .addCase(fetchUsers.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(fetchUsers.fulfilled, (s, action) => {
+        s.loading = false;
+        s.users = action.payload.data;
+      })
+      .addCase(fetchUsers.rejected, (s, action) => {
+        s.loading = false;
+        s.error = action.payload.message;
       });
-  },
+  }
 });
 
 export const { setUser, clearUser } = userSlice.actions;
