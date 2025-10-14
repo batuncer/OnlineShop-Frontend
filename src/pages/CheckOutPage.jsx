@@ -250,9 +250,7 @@ const CheckOutPage = () => {
               </Typography>
             </Box>
 
-            <Divider
-              sx={{ mb: 4, borderColor: "#8B4513", borderWidth: 1 }}
-            />
+            <Divider sx={{ mb: 4, borderColor: "#8B4513", borderWidth: 1 }} />
 
             {/* Order Items */}
             {preview && preview.items ? (
@@ -294,7 +292,8 @@ const CheckOutPage = () => {
                               Quantity: <strong>{item.quantity}</strong>
                             </Typography>
                             <Typography variant="body1" color="text.secondary">
-                              Price per item: <strong>£{item.perItemPrice}</strong>
+                              Price per item:{" "}
+                              <strong>£{item.perItemPrice}</strong>
                             </Typography>
                           </Box>
                         }
@@ -390,7 +389,8 @@ const CheckOutPage = () => {
                   sx={{
                     p: 4,
                     textAlign: "center",
-                    bgcolor: "#8B4513",
+                    background:
+                      "linear-gradient(135deg, #f2a772ff 0%, #c9934dff 50%, #a47553ff 100%)",
                     color: "white",
                     borderRadius: 3,
                     mb: 4,
@@ -429,9 +429,7 @@ const CheckOutPage = () => {
                   }}
                   onClick={() => setOpenModal(true)}
                   disabled={
-                    !preview ||
-                    !preview.items ||
-                    preview.items.length === 0
+                    !preview || !preview.items || preview.items.length === 0
                   }
                 >
                   Place Order Now
@@ -449,7 +447,11 @@ const CheckOutPage = () => {
                 <Typography variant="h6" color="text.secondary" gutterBottom>
                   Your cart is empty
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
                   Add some items to your cart to proceed with checkout
                 </Typography>
                 <Button
@@ -521,7 +523,10 @@ const CheckOutPage = () => {
               >
                 Are you sure you want to place this order for{" "}
                 <strong>
-                  £{preview ? (preview.totalPrice + preview.shippingCost).toFixed(2) : "0.00"}
+                  £
+                  {preview
+                    ? (preview.totalPrice + preview.shippingCost).toFixed(2)
+                    : "0.00"}
                 </strong>
                 ?
               </Typography>

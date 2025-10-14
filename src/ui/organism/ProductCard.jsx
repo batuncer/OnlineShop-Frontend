@@ -17,11 +17,9 @@ import {
   Chip,
   Box,
   Fade,
-  IconButton,
-  Tooltip
 } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -56,7 +54,11 @@ const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
           }
         }}
       >
-        <CardActionArea sx={{ flexGrow: 1 }}>
+        <CardActionArea sx={{ flexGrow: 1 }}            onClick={(e) => {
+                    e.stopPropagation();
+                    handleCardClick();
+                  }}
+                >
           <Box sx={{ position: 'relative', overflow: 'hidden' }}>
             <CardMedia
               component="img"
@@ -107,28 +109,12 @@ const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
                 }
               }}
             >
-              <Tooltip title="Quick View">
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: 'rgba(255,255,255,0.9)',
-                    '&:hover': {
-                      bgcolor: 'rgba(255,255,255,1)',
-                    }
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCardClick();
-                  }}
-                >
-                  <VisibilityIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
+         
             </Box>
           </Box>
 
           <Stack onClick={handleCardClick} sx={{ cursor: 'pointer' }}>
-            <CardContent sx={{ flexGrow: 1, p: 3 }}>
+            <CardContent sx={{ flexGrow: 1, p: 3 }} >
               <Typography 
                 gutterBottom 
                 variant="h6" 

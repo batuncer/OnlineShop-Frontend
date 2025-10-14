@@ -111,7 +111,7 @@ export default function UserPage() {
           elevation={0}
           sx={{
             background:
-              "linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%)",
+              "linear-gradient(135deg, #f2a772ff 0%, #c9934dff 50%, #a47553ff 100%)",
             color: "white",
             py: 6,
             mb: 6,

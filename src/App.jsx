@@ -13,6 +13,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 
 //Organisms
 import Navbar from "./ui/organism/Navbar";
+import Footer from "./ui/organism/Footer";
 
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/user/me" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
 
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
