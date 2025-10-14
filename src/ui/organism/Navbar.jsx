@@ -24,7 +24,7 @@ import PersonIcon from '@mui/icons-material/Person';
 // Molecules
 import CartDrawer from '../molecules/CartDrawer';
 import UserMenu from '../molecules/UserMenu';
-import { clearCart } from '../../modules/cart/cartSlice';
+import { addItem, clearCart, decreaseQuantity } from '../../modules/cart/cartSlice';
 
 // Hide navbar on scroll component
 function HideOnScroll(props) {
@@ -72,6 +72,15 @@ function Navbar() {
   // Handle logo click
   const handleLogoClick = () => {
     navigate('/');
+  };
+
+   const handleAddToCart = (item) => {
+    dispatch(addItem(item));
+  };
+
+  // Handle decrease item quantity
+  const handleDecreaseFromCart = (itemId) => {
+    dispatch(decreaseQuantity(itemId));
   };
 
   return (
@@ -269,6 +278,8 @@ function Navbar() {
           setDrawerOpen={setDrawerOpen} 
           handleRemoveFromCart={handleClearCart} 
           handleCheckout={handleCheckout} 
+          handleAddToCart={handleAddToCart}
+          handleDecreaseFromCart={handleDecreaseFromCart}
         />
 
         {/* User Menu */}

@@ -24,7 +24,10 @@ import {
   ShoppingBag as CheckoutIcon
 } from '@mui/icons-material';
 
-const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, handleCheckout }) => {
+const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, handleCheckout, handleAddToCart, handleDecreaseFromCart }) => {
+
+
+
   // Calculate totals
   const totalItems = cart.items ? cart.items.reduce((total, item) => total + item.quantity, 0) : 0;
   const totalPrice = cart.items ? cart.items.reduce((total, item) => total + (item.price * item.quantity), 0) : 0;
@@ -142,14 +145,14 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
                           '&:hover': { bgcolor: '#A0522D' }
                         }}
                       >
-                        <AddIcon fontSize="small" />
+                        <AddIcon fontSize="small" onClick={() => handleAddToCart(item)} />
                       </IconButton>
                       
                       <Typography variant="body1" fontWeight="bold" sx={{ mx: 1 }}>
                         {item.quantity}
                       </Typography>
                       
-                      <IconButton 
+                      <IconButton
                         size="small"
                         sx={{ 
                           bgcolor: '#8B4513',
@@ -158,7 +161,7 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
                           '&:hover': { bgcolor: '#A0522D' }
                         }}
                       >
-                        <RemoveIcon fontSize="small" />
+                        <RemoveIcon fontSize="small" onClick={() => handleDecreaseFromCart(item.id)} />
                       </IconButton>
                     </Box>
                   </Box>
