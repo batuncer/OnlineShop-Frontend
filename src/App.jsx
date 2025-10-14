@@ -14,6 +14,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 //Organisms
 import Navbar from "./ui/organism/Navbar";
 import Footer from "./ui/organism/Footer";
+import AdminPage from "./pages/AdminPage";
 
 
 export default function App() {
@@ -30,6 +31,9 @@ export default function App() {
 
         {/* Private Route */}
         <Route path="/user/me" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+
+        {/* Admin Route */}
+        <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
 
       </Routes>
       <Footer />
