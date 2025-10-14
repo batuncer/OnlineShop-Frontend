@@ -4,16 +4,15 @@ import axios from "axios";
 // API base URL
 import { API_BASE } from "../../config";
 
-// Fetch products list
+// Fetch products list with pagination
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts", 
-    async (_, { rejectWithValue }) => {
+    async ({ page = 0, size = 10 } = {}, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`${API_BASE}/products`);
+            const res = await axios.get(`${API_BASE}/products?page=${page}&size=${size}`);
             return res.data; // { success, message, data: [ {...}, {...} ] }
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Fetch products failed" });
-
         }
      }
 )
@@ -36,10 +35,11 @@ const productSlice = createSlice({
     initialState: {
         products: [],
         product: null,
-        pageInfo:{
+        pageInfo: {
             page: 0,
             totalPages: 0,
             totalResults: 0,
+            size: 10
         },
         loading: false,
         error: null,
@@ -49,6 +49,9 @@ const productSlice = createSlice({
             state.product = null;
             state.error = null;
             state.loading = false;
+        },
+        setCurrentPage: (state, action) => {
+            state.pageInfo.page = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -61,7 +64,12 @@ const productSlice = createSlice({
         .addCase(fetchProducts.fulfilled, (state, action) => {
             state.loading = false;
             state.products = action.payload.data;
-            state.pageInfo = action.payload.pageInfo || state.pageInfo;
+            if (action.payload.pageInfo) {
+                state.pageInfo = {
+                    ...state.pageInfo,
+                    ...action.payload.pageInfo
+                };
+            }
         })
         .addCase(fetchProducts.rejected, (state, action) => {
             state.loading = false;
@@ -75,6 +83,7 @@ const productSlice = createSlice({
         .addCase(fetchProductById.fulfilled, (state, action) => {
             state.loading = false;
             state.product = action.payload.data;
+            console.log("Fetched product:", state.product);
         })
         .addCase(fetchProductById.rejected, (state, action) => {
             state.loading = false;
@@ -83,5 +92,5 @@ const productSlice = createSlice({
     }
 });
 
-export const { clearProduct } = productSlice.actions;
+export const { clearProduct, setCurrentPage } = productSlice.actions;
 export default productSlice.reducer;
