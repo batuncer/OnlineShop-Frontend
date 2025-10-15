@@ -52,7 +52,7 @@ export default function UserPage() {
   const dispatch = useDispatch();
 
   // Get user and token from Redux state
-  const { user, loading, orderList } = useSelector((s) => s.user);
+  const { user, loading, orderList, ordersLoading } = useSelector((s) => s.user);
   
   // Modal state for delete confirmation
   const [deleteModal, setDeleteModal] = useState(false);
@@ -345,7 +345,24 @@ export default function UserPage() {
                   </Box>
                   <Divider sx={{ mb: 3, borderColor: "#8B4513" }} />
 
-                  {orderList && orderList.length > 0 && !loading ? (
+                  {/* Show loading state specifically for orders */}
+                  {ordersLoading ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: "200px",
+                      }}
+                    >
+                      <Box sx={{ textAlign: "center" }}>
+                        <CircularProgress size={50} sx={{ mb: 2, color: "#8B4513" }} />
+                        <Typography variant="h6" color="text.secondary">
+                          Loading your orders...
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ) : orderList && orderList.length > 0 ? (
                     <TableContainer
                       component={Paper}
                       variant="outlined"

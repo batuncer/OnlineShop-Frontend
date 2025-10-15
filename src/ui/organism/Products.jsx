@@ -19,30 +19,26 @@ import { Search as SearchIcon } from "@mui/icons-material";
 import ProductCard from "./ProductCard";
 
 // Product slice
-import { fetchProducts } from "../../modules/product/productSlice";
+import { fetchProducts, setCurrentPage } from "../../modules/product/productSlice";
 
 // Cart slice
 import { addItem } from "../../modules/cart/cartSlice";
 
 const Products = () => {
-  const { products, loading, error } = useSelector((state) => state.product);
+  const { products, pageInfo, loading, error } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [currentPage, setCurrentPage] = React.useState(0);
 
   // Fetch products on component mount and when page changes
   React.useEffect(() => {
-    dispatch(fetchProducts({ page: currentPage, size: 10 }));
-  }, [dispatch, currentPage]);
+    dispatch(fetchProducts({ page: pageInfo.page, size: pageInfo.size }));
+  }, [dispatch, pageInfo.page, pageInfo.size]);
 
-  // Extract product list from products state
-  const productList = products?.content || products || [];
-  const totalPages = products?.totalPages || Math.ceil(productList.length / 10);
-  const totalElements = products?.totalElements || productList.length;
-  const currentPageNumber = products?.number || currentPage;
 
-  // Filter products based on search term - FIXED
+  const productList = products || [];
+  
+  // Filter products based on search term
   const filteredProducts = productList.filter(
     (product) =>
       product.typeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -55,7 +51,7 @@ const Products = () => {
     // MUI Pagination is 1-based, convert to 0-based for API
     const apiPage = newPage - 1;
     console.log("Page change clicked:", { newPage, apiPage });
-    setCurrentPage(apiPage);
+    dispatch(setCurrentPage(apiPage));
     // Clear search when changing pages
     setSearchTerm("");
   };
@@ -111,7 +107,7 @@ const Products = () => {
 
   return (
     <Box sx={{ mx: { xs: 2, md: 32 }, mt: 4, mb: 6 }}>
-      {/* Search Bar - FIXED PLACEMENT */}
+      {/* Search Bar */}
       <Box sx={{ mb: 4 , maxWidth: 600, mx: "auto" }}>
         <TextField
           fullWidth
@@ -144,19 +140,19 @@ const Products = () => {
           </Typography>
         ) : (
           <Typography variant="h6" sx={{ color: "#8B4513" }}>
-            {totalElements} product{totalElements !== 1 ? "s" : ""} available
+            {pageInfo.totalElements} product{pageInfo.totalElements !== 1 ? "s" : ""} available
           </Typography>
         )}
 
-        {!searchTerm && totalPages > 1 && (
+        {!searchTerm && pageInfo.totalPages > 1 && (
           <Typography variant="body2" color="text.secondary">
-            Page {currentPageNumber + 1} of {totalPages} • Showing{" "}
-            {productList.length} products
+            Page {pageInfo.page + 1} of {pageInfo.totalPages} • Showing{" "}
+            {pageInfo.numberOfElements} products
           </Typography>
         )}
       </Box>
 
-      {/* No Results Message - FIXED */}
+      {/* No Results Message */}
       {filteredProducts.length === 0 && searchTerm && (
         <Box sx={{ textAlign: "center", mt: 4, mb: 4 }}>
           <Paper
@@ -218,11 +214,11 @@ const Products = () => {
           </Box>
 
           {/* Pagination - Only show when not searching */}
-          {!searchTerm && totalPages > 1 && (
+          {!searchTerm && pageInfo.totalPages > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
-                count={totalPages}
-                page={currentPageNumber + 1}
+                count={pageInfo.totalPages}
+                page={pageInfo.page + 1}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"

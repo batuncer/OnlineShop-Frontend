@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -8,14 +8,16 @@ import {
   Paper,
   Avatar,
   Chip,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Dashboard as DashboardIcon,
   People as PeopleIcon,
   Inventory as InventoryIcon,
   Add as AddIcon,
-} from '@mui/icons-material';
-import UserManagement from '../ui/organism/UserManagment';
+} from "@mui/icons-material";
+import UserManagement from "../ui/organism/UserManagment";
+import SupplierAdd from "../ui/organism/SupplierAdd";
+import ProductAdd from "../ui/organism/ProductAdd";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,7 +43,7 @@ const AdminPage = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: '#fafafa', minHeight: '100vh', py: 4 }}>
+    <Box sx={{ bgcolor: "#fafafa", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="xl">
         {/* Header */}
         <Paper
@@ -49,16 +51,22 @@ const AdminPage = () => {
           sx={{
             p: 4,
             mb: 4,
-            background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
-            color: 'white',
+            background: "linear-gradient(135deg, #8B4513 0%, #A0522D 100%)",
+            color: "white",
             borderRadius: 3,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
                 sx={{
-                  bgcolor: 'rgba(255,255,255,0.2)',
+                  bgcolor: "rgba(255,255,255,0.2)",
                   mr: 3,
                   width: 56,
                   height: 56,
@@ -75,10 +83,10 @@ const AdminPage = () => {
             <Chip
               label="Administrator"
               sx={{
-                bgcolor: 'rgba(255,255,255,0.2)',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '1rem',
+                bgcolor: "rgba(255,255,255,0.2)",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "1rem",
                 py: 2,
                 px: 1,
               }}
@@ -93,17 +101,17 @@ const AdminPage = () => {
             onChange={handleTabChange}
             variant="fullWidth"
             sx={{
-              '& .MuiTab-root': {
+              "& .MuiTab-root": {
                 py: 2,
-                fontSize: '1rem',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                '&.Mui-selected': {
-                  color: '#8B4513',
+                fontSize: "1rem",
+                fontWeight: "bold",
+                textTransform: "none",
+                "&.Mui-selected": {
+                  color: "#8B4513",
                 },
               },
-              '& .MuiTabs-indicator': {
-                backgroundColor: '#8B4513',
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#8B4513",
                 height: 3,
               },
             }}
@@ -118,18 +126,21 @@ const AdminPage = () => {
               label="Product Management"
               iconPosition="start"
             />
-            <Tab
-              icon={<AddIcon />}
-              label="Add Supplier"
-              iconPosition="start"
-            />
+            <Tab icon={<AddIcon />} label="Add Supplier" iconPosition="start" />
           </Tabs>
         </Paper>
 
         <TabPanel value={tabValue} index={0}>
           <UserManagement />
         </TabPanel>
-  
+
+        <TabPanel value={tabValue} index={1}>
+          <ProductAdd />
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          <SupplierAdd />
+        </TabPanel>
       </Container>
     </Box>
   );

@@ -1,33 +1,40 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// API base URL
 import { API_BASE } from "../../config";
-
-// Utility to get auth header with token
 import { authHeader } from "../../utils/authHeader";
 
-// Fetch all suppliers
+// Fetch suppliers
 export const fetchSuppliers = createAsyncThunk(
-  "supplier/fetchSuppliers",
+  "supplier/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/suppliers`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
+      const headers = authHeader(true);
+      const res = await axios.get(`${API_BASE}/suppliers`, { headers });
+      return res.data;
+    } catch (e) {
+      return rejectWithValue(
+        e.response?.data || { message: "Fetch suppliers failed" }
+      );
     }
   }
 );
 
+// Add supplier
 export const addSupplier = createAsyncThunk(
-  "supplier/addSupplier",
+  "supplier/add",
   async (supplierData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE}/suppliers`, supplierData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
+      const headers = authHeader(true);
+      const res = await axios.post(
+        `${API_BASE}/suppliers/create`,
+        supplierData,
+        { headers }
+      );
+      return res.data;
+    } catch (e) {
+      return rejectWithValue(
+        e.response?.data || { message: "Add supplier failed" }
+      );
     }
   }
 );
@@ -71,11 +78,19 @@ const supplierSlice = createSlice({
       })
       .addCase(addSupplier.fulfilled, (state, action) => {
         state.loading = false;
-        state.suppliers.push(action.payload);
+        state.success = true;
+        if (!Array.isArray(state.suppliers)) {
+          state.suppliers = [];
+        }
+        if (action.payload.data) {
+          state.suppliers.push(action.payload.data);
+        } else if (action.payload) {
+          state.suppliers.push(action.payload);
+        }
       })
       .addCase(addSupplier.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message || "Add supplier failed";
       });
   },
 });
