@@ -305,7 +305,8 @@ const Product = () => {
                     }}
                   >
                     {product.description ||
-                      "Experience the finest quality with this premium product, carefully selected and crafted to deliver exceptional taste and aroma."}{"Recommended  per cup : " + product.recommendedGramsPerCup+ "g"}
+                      "Experience the finest quality with this premium product, carefully selected and crafted to deliver exceptional taste and aroma."}{" "}
+                    {"Recommended  per cup : " + product.recommendedGramsPerCup+ "g"}
                   </Typography>
                 </Box>
 
