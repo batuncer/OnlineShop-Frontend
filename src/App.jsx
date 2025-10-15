@@ -14,25 +14,58 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 //Organisms
 import Navbar from "./ui/organism/Navbar";
 import Footer from "./ui/organism/Footer";
-
+import AdminPage from "./pages/AdminPage";
+import { Box } from "@mui/material";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/checkout" element={<CheckOutPage />} />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+      >
+        <Navbar />
 
-        {/* Private Route */}
-        <Route path="/user/me" element={<ProtectedRoute><UserPage /></ProtectedRoute>} />
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        ></Box>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/checkout" element={<CheckOutPage />} />
 
-      </Routes>
-      <Footer />
+          {/* Private Route */}
+          <Route
+            path="/user/me"
+            element={
+              <ProtectedRoute>
+                <UserPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Route */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+      </Box>
     </BrowserRouter>
   );
 }

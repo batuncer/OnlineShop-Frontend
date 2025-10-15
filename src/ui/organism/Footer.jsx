@@ -24,6 +24,7 @@ const Footer = () => {
         mt: "auto",
         background:
           "linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B4513 100%)",
+        marginTop: 'auto',
       }}
     >
       <Container

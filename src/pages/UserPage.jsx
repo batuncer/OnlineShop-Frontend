@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // MUI ui
@@ -23,6 +23,11 @@ import {
   CircularProgress,
   Alert,
   Fade,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
 } from "@mui/material";
 
 // Icons
@@ -31,6 +36,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CancelIcon from "@mui/icons-material/Cancel";
 import EmptyStateIcon from "@mui/icons-material/Assignment";
+import WarningIcon from "@mui/icons-material/Warning";
 
 // Import logout actions
 import { logout } from "../modules/auth/authSlice";
@@ -39,6 +45,7 @@ import { logout } from "../modules/auth/authSlice";
 import { fetchMe } from "../modules/user/userSlice";
 import { getUserOrders } from "../modules/user/userSlice";
 import formatMonthYear from "../utils/cusTomDate";
+import { deleteOrderById } from "../modules/order/orderSlice";
 
 export default function UserPage() {
   // Redux hooks
@@ -46,6 +53,11 @@ export default function UserPage() {
 
   // Get user and token from Redux state
   const { user, loading, orderList } = useSelector((s) => s.user);
+  
+  // Modal state for delete confirmation
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch user details if token exists
   useEffect(() => {
@@ -56,13 +68,35 @@ export default function UserPage() {
     dispatch(getUserOrders());
   }, [dispatch]);
 
-  const cancelOrder = (orderId) => {
-    // Dispatch an action to cancel the order . it will be implemented in the future after backend is ready
-    console.log(`Cancel order with ID: ${orderId}`);
-
+  // Handle opening delete modal
+  const handleDeleteClick = (order) => {
+    setSelectedOrder(order);
+    setDeleteModal(true);
   };
 
-  console.log("User orders from state:", orderList);
+  // Handle closing delete modal
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
+    setSelectedOrder(null);
+  };
+
+  // Handle confirming delete
+  const handleConfirmDelete = async () => {
+    if (selectedOrder) {
+      setIsDeleting(true);
+      try {
+        await dispatch(deleteOrderById(selectedOrder.id)).unwrap();
+        // Refresh orders list after successful deletion
+        dispatch(getUserOrders());
+        handleCloseDeleteModal();
+      } catch (error) {
+        console.error('Failed to delete order:', error);
+        // You could show an error message here
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -311,7 +345,7 @@ export default function UserPage() {
                   </Box>
                   <Divider sx={{ mb: 3, borderColor: "#8B4513" }} />
 
-                  {orderList && orderList.length > 0 ? (
+                  {orderList && orderList.length > 0 && !loading ? (
                     <TableContainer
                       component={Paper}
                       variant="outlined"
@@ -401,7 +435,7 @@ export default function UserPage() {
                                   color="error"
                                   size="small"
                                   startIcon={<CancelIcon />}
-                                  onClick={() => cancelOrder(order.id)}
+                                  onClick={() => handleDeleteClick(order)}
                                   sx={{
                                     fontWeight: "bold",
                                     borderWidth: 2,
@@ -466,6 +500,98 @@ export default function UserPage() {
             </Grid>
           </Grid>
         </Container>
+
+        {/* Delete Order Confirmation Modal */}
+        <Dialog
+          open={deleteModal}
+          onClose={handleCloseDeleteModal}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: 3,
+              border: '2px solid #d32f2f',
+            }
+          }}
+        >
+          <DialogTitle sx={{ 
+            bgcolor: '#d32f2f', 
+            color: 'white', 
+            display: 'flex', 
+            alignItems: 'center',
+            fontWeight: 'bold'
+          }}>
+            <WarningIcon sx={{ mr: 2 }} />
+            Cancel Order Confirmation
+          </DialogTitle>
+          
+          <DialogContent sx={{ p: 3 }}>
+            <DialogContentText sx={{ fontSize: '1.1rem', color: 'text.primary', mb: 2 }}>
+              Are you sure you want to cancel this order?
+            </DialogContentText>
+            
+            {selectedOrder && (
+              <Paper 
+                elevation={1} 
+                sx={{ 
+                  p: 2, 
+                  bgcolor: '#f5f5f5', 
+                  borderRadius: 2,
+                  border: '1px solid #8B4513'
+                }}
+              >
+                <Typography variant="body1" fontWeight="bold" sx={{ color: '#8B4513', mb: 1 }}>
+                  Order Details:
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 0.5 }}>
+                  <strong>Order ID:</strong> #{selectedOrder.id}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 0.5 }}>
+                  <strong>Date:</strong> {formatMonthYear(selectedOrder.orderDate)}
+                </Typography>
+                <Typography variant="body2">
+                  <strong>Total Amount:</strong> £{selectedOrder.totalAmount}
+                </Typography>
+              </Paper>
+            )}
+            
+            <Alert severity="warning" sx={{ mt: 2, borderRadius: 2 }}>
+              <Typography variant="body2">
+                <strong>Warning:</strong> This action cannot be undone. Once cancelled, you will need to place a new order.
+              </Typography>
+            </Alert>
+          </DialogContent>
+          
+          <DialogActions sx={{ p: 3, bgcolor: '#fafafa' }}>
+            <Button 
+              onClick={handleCloseDeleteModal}
+              variant="outlined"
+              sx={{
+                color: '#666',
+                borderColor: '#666',
+                '&:hover': {
+                  borderColor: '#333',
+                  color: '#333',
+                }
+              }}
+            >
+              Keep Order
+            </Button>
+            <Button 
+              onClick={handleConfirmDelete}
+              variant="contained"
+              color="error"
+              disabled={isDeleting}
+              startIcon={isDeleting ? <CircularProgress size={16} color="inherit" /> : <CancelIcon />}
+              sx={{
+                fontWeight: 'bold',
+                minWidth: 140,
+              }}
+            >
+              {isDeleting ? 'Cancelling...' : 'Cancel Order'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Fade>
   );

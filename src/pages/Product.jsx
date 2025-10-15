@@ -37,6 +37,7 @@ const Product = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
   console.log("🔍 Product component mounting with ID:", productId);
 
@@ -326,6 +327,24 @@ const Product = () => {
                   </Typography>
 
                   <Grid container spacing={2} sx={{ justifyContent: "center" }}>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <Paper
+                        sx={{
+                          p: 2,
+                          textAlign: "center",
+                          bgcolor: "#f5f5dc",
+                          border: "1px solid #8B4513",
+                          borderRadius: 2,
+                        }}
+                      >
+                        <Typography variant="body2" color="text.secondary">
+                          Supplier
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold">
+                          {product.supplierId}    {/*TODO: Implement supplier name retrieval */}
+                        </Typography>
+                      </Paper>
+                    </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                       <Paper
                         sx={{

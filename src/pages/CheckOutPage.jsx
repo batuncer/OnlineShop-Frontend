@@ -71,8 +71,6 @@ const CheckOutPage = () => {
       console.error("No items to order");
       return;
     }
-
-    console.log("Sending orderData:", orderData);
     dispatch(createOrder(orderData));
     dispatch(clearCart());
     setOpenModal(false);
