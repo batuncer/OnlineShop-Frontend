@@ -37,9 +37,6 @@ const Product = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-
-  console.log("🔍 Product component mounting with ID:", productId);
 
   const { product, loading, error } = useSelector((state) => state.product);
 
@@ -341,7 +338,7 @@ const Product = () => {
                           Supplier
                         </Typography>
                         <Typography variant="body1" fontWeight="bold">
-                          {product.supplierId}    {/*TODO: Implement supplier name retrieval */}
+                          {product.supplierName} 
                         </Typography>
                       </Paper>
                     </Grid>

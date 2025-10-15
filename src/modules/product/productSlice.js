@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// API base URL
 import { API_BASE } from "../../config";
+import { authHeader } from "../../utils/authHeader";
 
 // Fetch products list with pagination
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts", 
     async ({ page = 0, size = 10 } = {}, { rejectWithValue }) => {
         try {
-            const res = await axios.get(`${API_BASE}/products`);
-            return res.data; // { success, message, data: [ {...}, {...} ] }
+            // Add pagination parameters to the URL
+            const res = await axios.get(`${API_BASE}/products?page=${page}&size=${size}`);
+            return res.data; // { success, message, data: { content: [...], totalPages, etc. } }
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Fetch products failed" });
         }
@@ -35,13 +35,8 @@ export const updateProductById = createAsyncThunk(
     "product/updateProductById",
     async ({ productId, productData }, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-
-            const res = await axios.put(`${API_BASE}/products/${productId}`, productData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const headers = authHeader(true);
+            const res = await axios.put(`${API_BASE}/products/${productId}`, productData, { headers });
             return res.data; // { success, message, data: { ... } }
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Update product failed" });
@@ -49,38 +44,29 @@ export const updateProductById = createAsyncThunk(
     }
 )
 
-// Add new product
+// Add product
 export const addProduct = createAsyncThunk(
-    "product/addProduct",
-    async (productData, { rejectWithValue }) => {
-        try {
-            const token = localStorage.getItem("token");
-
-            const res = await axios.post(`${API_BASE}/products`, productData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            return res.data; // { success, message, data: { ... } }
-        } catch (error) {
-            return rejectWithValue(error.response?.data || { message: "Add product failed" });
-        }
+  "product/add",
+  async (productData, { rejectWithValue }) => {
+    try {
+      const headers = authHeader(true);
+      const res = await axios.post(`${API_BASE}/products`, productData, { headers });
+      console.log("Product add response:", res.data);
+      return res.data;
+    } catch (e) {
+      console.error("Product add error:", e.response?.data || e.message);
+      return rejectWithValue(e.response?.data || { message: "Add product failed" });
     }
-)
+  }
+);
 
 // Delete product by ID
 export const deleteProductById = createAsyncThunk(
     "product/deleteProductById",
     async (productId, { rejectWithValue }) => {
         try {
-            const token = localStorage.getItem("token");
-
-            const res = await axios.delete(`${API_BASE}/products/${productId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const headers = authHeader(true);
+            const res = await axios.delete(`${API_BASE}/products/${productId}`, { headers });
             return { productId, data: res.data }; // Return productId for state update
         } catch (error) {
             return rejectWithValue(error.response?.data || { message: "Delete product failed" });
@@ -91,19 +77,23 @@ export const deleteProductById = createAsyncThunk(
 const productSlice = createSlice({
     name: "product",
     initialState: {
-        products: [],
+        products: [], 
         product: null,
         pageInfo: {
             page: 0,
             totalPages: 0,
-            totalResults: 0,
-            size: 10
+            totalElements: 0,
+            size: 10,
+            first: true,
+            last: false,
+            numberOfElements: 0
         },
         loading: false,
-        updateLoading: false, // Separate loading for updates
-        deleteLoading: false, // Separate loading for deletes
+        updateLoading: false,
+        deleteLoading: false,
         error: null,
-        successMessage: "", // Add success message to state
+        successMessage: "",
+        success: false,
     },
     reducers: {
         clearProduct: (state) => {
@@ -120,7 +110,13 @@ const productSlice = createSlice({
         },
         setSuccessMessage: (state, action) => {
             state.successMessage = action.payload;
-        }
+        },
+        clearError: (state) => {
+            state.error = null;
+        },
+        clearSuccess: (state) => {
+            state.success = false;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -131,11 +127,32 @@ const productSlice = createSlice({
         })
         .addCase(fetchProducts.fulfilled, (state, action) => {
             state.loading = false;
-            state.products = action.payload.data;
-            if (action.payload.pageInfo) {
+            const responseData = action.payload.data;
+            
+            // Handle paginated response structure
+            if (responseData.content) {
+                // Paginated response
+                state.products = responseData.content;
                 state.pageInfo = {
-                    ...state.pageInfo,
-                    ...action.payload.pageInfo
+                    page: responseData.number || 0,
+                    totalPages: responseData.totalPages || 0,
+                    totalElements: responseData.totalElements || 0,
+                    size: responseData.size || 10,
+                    first: responseData.first || true,
+                    last: responseData.last || false,
+                    numberOfElements: responseData.numberOfElements || 0
+                };
+            } else if (Array.isArray(responseData)) {
+                // Non-paginated response (array)
+                state.products = responseData;
+                state.pageInfo = {
+                    page: 0,
+                    totalPages: 1,
+                    totalElements: responseData.length,
+                    size: responseData.length,
+                    first: true,
+                    last: true,
+                    numberOfElements: responseData.length
                 };
             }
         })
@@ -183,19 +200,24 @@ const productSlice = createSlice({
         .addCase(addProduct.pending, (state) => {
             state.loading = true;
             state.error = null;
+            state.success = false;
         })
         .addCase(addProduct.fulfilled, (state, action) => {
             state.loading = false;
+            state.success = true;
             state.successMessage = "Product added successfully!";
             
-            // Add new product to the products array
-            if (Array.isArray(state.products)) {
-                state.products.push(action.payload.data);
+            // Add the new product to the beginning of the array
+            if (Array.isArray(state.products) && action.payload.data) {
+                state.products.unshift(action.payload.data);
+                // Update total count
+                state.pageInfo.totalElements += 1;
             }
         })
         .addCase(addProduct.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload?.message || "Failed to add product";
+            state.error = action.payload?.message || "Add product failed";
+            state.success = false;
         })
         // Delete product
         .addCase(deleteProductById.pending, (state) => {
@@ -210,6 +232,8 @@ const productSlice = createSlice({
             const deletedProductId = action.payload.productId;
             if (Array.isArray(state.products)) {
                 state.products = state.products.filter(p => p.id !== deletedProductId);
+                // Update total count
+                state.pageInfo.totalElements -= 1;
             }
         })
         .addCase(deleteProductById.rejected, (state, action) => {
@@ -219,5 +243,5 @@ const productSlice = createSlice({
     }
 });
 
-export const { clearProduct, setCurrentPage, clearMessages, setSuccessMessage } = productSlice.actions;
+export const { clearProduct, setCurrentPage, clearMessages, setSuccessMessage, clearError, clearSuccess } = productSlice.actions;
 export default productSlice.reducer;
