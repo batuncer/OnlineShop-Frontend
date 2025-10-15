@@ -52,6 +52,7 @@ const userSlice = createSlice({
     user: null,
     token: null,
     loading: false,
+    ordersLoading: false,
     error: null,
     orderList: [],
   },
@@ -77,14 +78,14 @@ const userSlice = createSlice({
         s.loading = false;
         s.error = action.payload.message;
       })
-      .addCase(getUserOrders.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(getUserOrders.pending, (s) => { s.ordersLoading = true; s.error = null; })
       .addCase(getUserOrders.fulfilled, (s, action) => {
-        s.loading = false;
+        s.ordersLoading = false;
         s.orderList = action.payload.data;
         console.log("Fetched orders:", action.payload.data);
       })
       .addCase(getUserOrders.rejected, (s, action) => {
-        s.loading = false;
+        s.ordersLoading = false;
         s.error = action.payload.message;
       })
       .addCase(fetchUsers.pending, (s) => { s.loading = true; s.error = null; })
