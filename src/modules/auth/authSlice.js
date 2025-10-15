@@ -43,6 +43,15 @@ export const fetchMe = createAsyncThunk(
   }
 );
 
+// Helper function to clear persist storage
+const clearPersistStorage = () => {
+  try {
+    localStorage.removeItem('persist:root');
+  } catch (error) {
+    console.error('Error clearing persist storage:', error);
+  }
+};
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -55,7 +64,10 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null; 
       state.token = null;
-
+      clearPersistStorage();
+    },
+    clearError: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (b) => {
@@ -66,7 +78,13 @@ const authSlice = createSlice({
         s.token=d?.token||null;
         s.user = d ? { username:d.username, email:d.email, id:d.userId, role: d.role } : null;
      })
-     .addCase(registerUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Register failed";})
+     .addCase(registerUser.rejected, (s,a)=>{
+        s.loading=false;
+        s.error=a.payload?.data?.message||"Register failed";
+        s.user = null;
+        s.token = null;
+        clearPersistStorage();
+     })
 
      .addCase(loginUser.pending, (s)=>{s.loading=true;s.error=null;})
      .addCase(loginUser.fulfilled, (s,a)=>{
@@ -76,7 +94,13 @@ const authSlice = createSlice({
         console.log("Login successful, token:", s.token);
         s.user = d ? { username:d.username, email:d.email, id:d.userId, role: d.role } : null;
      })
-     .addCase(loginUser.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.data.message||"Login failed";})
+     .addCase(loginUser.rejected, (s,a)=>{
+        s.loading=false;
+        s.error=a.payload?.data?.message||"Login failed";
+        s.user = null;
+        s.token = null;
+        clearPersistStorage();
+     })
 
      .addCase(fetchMe.pending, (s)=>{s.loading=true;s.error=null;})
      .addCase(fetchMe.fulfilled, (s,a)=>{
@@ -85,9 +109,15 @@ const authSlice = createSlice({
         console.log("fetchMe successful, user data:", d);
         if (d) s.user = { username:d.data.username, email:d.data.email, id:d.data.id, role: d.data.role };
      })
-     .addCase(fetchMe.rejected, (s,a)=>{s.loading=false;s.error=a.payload?.message;});
+     .addCase(fetchMe.rejected, (s,a)=>{
+        s.loading=false;
+        s.error=a.payload?.message;
+        s.user = null;
+        s.token = null;
+        clearPersistStorage();
+     });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;
