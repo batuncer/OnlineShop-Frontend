@@ -10,7 +10,10 @@ import {
   CircularProgress,
   Alert,
   Paper,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
+import { Search as SearchIcon } from "@mui/icons-material";
 
 // Components
 import ProductCard from "./ProductCard";
@@ -25,8 +28,7 @@ const Products = () => {
   const { products, loading, error } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  // Local state to track current page
+  const [searchTerm, setSearchTerm] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(0);
 
   // Fetch products on component mount and when page changes
@@ -34,8 +36,19 @@ const Products = () => {
     dispatch(fetchProducts({ page: currentPage, size: 10 }));
   }, [dispatch, currentPage]);
 
-  console.log("Products state:", { products, loading, error });
-  console.log("Current page:", currentPage);
+  // Extract product list from products state
+  const productList = products?.content || products || [];
+  const totalPages = products?.totalPages || Math.ceil(productList.length / 10);
+  const totalElements = products?.totalElements || productList.length;
+  const currentPageNumber = products?.number || currentPage;
+
+  // Filter products based on search term - FIXED
+  const filteredProducts = productList.filter(
+    (product) =>
+      product.typeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Handle page change
   const handlePageChange = (event, newPage) => {
@@ -43,7 +56,8 @@ const Products = () => {
     const apiPage = newPage - 1;
     console.log("Page change clicked:", { newPage, apiPage });
     setCurrentPage(apiPage);
-    
+    // Clear search when changing pages
+    setSearchTerm("");
   };
 
   // Handle adding product to basket
@@ -95,35 +109,88 @@ const Products = () => {
     );
   }
 
-
-  const productList = products?.content || [];
-  const totalPages = products?.totalPages || 0;
-  const totalElements = products?.totalElements || 0;
-  const currentPageNumber = products?.number || 0;
-
-  console.log("Extracted data:", {
-    productList: productList.length,
-    totalPages,
-    totalElements,
-    currentPageNumber
-  });
-
   return (
     <Box sx={{ mx: { xs: 2, md: 32 }, mt: 4, mb: 6 }}>
-      {/* Results Count and Page Info */}
+      {/* Search Bar - FIXED PLACEMENT */}
+      <Box sx={{ mb: 4 , maxWidth: 600, mx: "auto" }}>
+        <TextField
+          fullWidth
+          placeholder="Search products by name, category, or description..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: "#8B4513" }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2,
+              "&.Mui-focused fieldset": {
+                borderColor: "#8B4513",
+              },
+            },
+          }}
+        />
+      </Box>
+
       <Box sx={{ mb: 3, textAlign: "center" }}>
-        <Typography variant="h6" sx={{ color: "#8B4513" }}>
-          {totalElements} product{totalElements !== 1 ? "s" : ""} available
-        </Typography>
-        {totalPages > 1 && (
+        {searchTerm ? (
+          <Typography variant="h6" sx={{ color: "#8B4513" }}>
+            {filteredProducts.length} product
+            {filteredProducts.length !== 1 ? "s" : ""} found for "{searchTerm}"
+          </Typography>
+        ) : (
+          <Typography variant="h6" sx={{ color: "#8B4513" }}>
+            {totalElements} product{totalElements !== 1 ? "s" : ""} available
+          </Typography>
+        )}
+
+        {!searchTerm && totalPages > 1 && (
           <Typography variant="body2" color="text.secondary">
-            Page {currentPageNumber + 1} of {totalPages} • Showing {productList.length} products
+            Page {currentPageNumber + 1} of {totalPages} • Showing{" "}
+            {productList.length} products
           </Typography>
         )}
       </Box>
 
-      {/* Products Grid */}
-      {productList.length > 0 ? (
+      {/* No Results Message - FIXED */}
+      {filteredProducts.length === 0 && searchTerm && (
+        <Box sx={{ textAlign: "center", mt: 4, mb: 4 }}>
+          <Paper
+            elevation={2}
+            sx={{
+              p: 4,
+              borderRadius: 3,
+              bgcolor: "#f5f5dc",
+              border: "1px solid #8B4513",
+            }}
+          >
+            <Typography variant="h6" sx={{ color: "#8B4513", mb: 1 }}>
+              No products found for "{searchTerm}"
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Try adjusting your search criteria or{" "}
+              <Box
+                component="span"
+                sx={{
+                  color: "#8B4513",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  "&:hover": { color: "#A0522D" },
+                }}
+                onClick={() => setSearchTerm("")}
+              >
+                clear search
+              </Box>
+            </Typography>
+          </Paper>
+        </Box>
+      )}
+
+      {(searchTerm ? filteredProducts : productList).length > 0 ? (
         <>
           <Box
             sx={{
@@ -134,7 +201,7 @@ const Products = () => {
               mb: 4,
             }}
           >
-            {productList.map((product) => (
+            {(searchTerm ? filteredProducts : productList).map((product) => (
               <ProductCard
                 key={product.id}
                 product={{
@@ -150,12 +217,12 @@ const Products = () => {
             ))}
           </Box>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
+          {/* Pagination - Only show when not searching */}
+          {!searchTerm && totalPages > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
                 count={totalPages}
-                page={currentPageNumber + 1} 
+                page={currentPageNumber + 1}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"
@@ -169,35 +236,45 @@ const Products = () => {
                       color: "white",
                       "&:hover": {
                         bgcolor: "#A0522D",
-                      }
+                      },
                     },
                     "&:hover": {
                       bgcolor: "rgba(139, 69, 19, 0.1)",
-                    }
+                    },
                   },
                 }}
               />
             </Box>
           )}
+
+          {searchTerm && filteredProducts.length > 10 && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              <Typography variant="body2" color="text.secondary">
+                Showing all {filteredProducts.length} search results
+              </Typography>
+            </Box>
+          )}
         </>
       ) : (
-        <Paper
-          elevation={2}
-          sx={{
-            p: 6,
-            textAlign: "center",
-            borderRadius: 3,
-            bgcolor: "#f5f5dc",
-            border: "1px solid #8B4513",
-          }}
-        >
-          <Typography variant="h6" sx={{ color: "#8B4513" }}>
-            No products available
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Please check back later for new products
-          </Typography>
-        </Paper>
+        !searchTerm && (
+          <Paper
+            elevation={2}
+            sx={{
+              p: 6,
+              textAlign: "center",
+              borderRadius: 3,
+              bgcolor: "#f5f5dc",
+              border: "1px solid #8B4513",
+            }}
+          >
+            <Typography variant="h6" sx={{ color: "#8B4513" }}>
+              No products available
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Please check back later for new products
+            </Typography>
+          </Paper>
+        )
       )}
     </Box>
   );

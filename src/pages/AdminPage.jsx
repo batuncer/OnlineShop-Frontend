@@ -17,7 +17,6 @@ import {
 } from '@mui/icons-material';
 import UserManagement from '../ui/organism/UserManagment';
 
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -121,7 +120,7 @@ const AdminPage = () => {
             />
             <Tab
               icon={<AddIcon />}
-              label="Add Product"
+              label="Add Supplier"
               iconPosition="start"
             />
           </Tabs>
@@ -130,6 +129,7 @@ const AdminPage = () => {
         <TabPanel value={tabValue} index={0}>
           <UserManagement />
         </TabPanel>
+  
       </Container>
     </Box>
   );
