@@ -289,7 +289,7 @@ export default function UserPage() {
                     </Box>
                   </Box>
 
-                  <Button
+                  <AppButton
                     sx={{
                       mt: 4,
                       width: "100%",
@@ -306,7 +306,7 @@ export default function UserPage() {
                     onClick={() => dispatch(logout())}
                   >
                     Sign Out
-                  </Button>
+                  </AppButton>
                 </CardContent>
               </Card>
             </Grid>
@@ -447,7 +447,7 @@ export default function UserPage() {
                                 </Typography>
                               </TableCell>
                               <TableCell align="center">
-                                <Button
+                                <AppButton
                                   variant="outlined"
                                   color="error"
                                   size="small"
@@ -462,7 +462,7 @@ export default function UserPage() {
                                   }}
                                 >
                                   Cancel
-                                </Button>
+                                </AppButton>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -497,7 +497,7 @@ export default function UserPage() {
                       <Typography variant="body2" color="text.secondary">
                         Start shopping to see your orders here
                       </Typography>
-                      <Button
+                      <AppButton
                         variant="contained"
                         sx={{
                           mt: 3,
@@ -509,7 +509,7 @@ export default function UserPage() {
                         onClick={() => (window.location.href = "/")}
                       >
                         Start Shopping
-                      </Button>
+                      </AppButton>
                     </Paper>
                   )}
                 </CardContent>
@@ -580,7 +580,7 @@ export default function UserPage() {
           </DialogContent>
           
           <DialogActions sx={{ p: 3, bgcolor: '#fafafa' }}>
-            <Button 
+            <AppButton 
               onClick={handleCloseDeleteModal}
               variant="outlined"
               sx={{
@@ -593,8 +593,8 @@ export default function UserPage() {
               }}
             >
               Keep Order
-            </Button>
-            <Button 
+            </AppButton>
+            <AppButton 
               onClick={handleConfirmDelete}
               variant="contained"
               color="error"
@@ -606,7 +606,7 @@ export default function UserPage() {
               }}
             >
               {isDeleting ? 'Cancelling...' : 'Cancel Order'}
-            </Button>
+            </AppButton>
           </DialogActions>
         </Dialog>
       </Box>

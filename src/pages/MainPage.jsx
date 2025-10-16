@@ -15,6 +15,7 @@ import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 // Image
 import coffeeMain from "../assets/coffeeMain.webp";
 import Products from "../ui/organism/Products";
+import AppButton from "../ui/atoms/AppButton";
 
 export default function MainPage() {
   return (
@@ -81,7 +82,7 @@ export default function MainPage() {
                   >
                     Discover the finest selection from around the world
                   </Typography>
-                  <Button
+                  <AppButton
                     variant="contained"
                     size="large"
                     sx={{
@@ -106,7 +107,7 @@ export default function MainPage() {
                     }}
                   >
                     Shop Now
-                  </Button>
+                  </AppButton>
                 </Box>
               </Box>
             </Box>

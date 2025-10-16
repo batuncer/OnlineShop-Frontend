@@ -6,7 +6,6 @@ import {
   Box,
   Typography,
   Divider,
-  Button,
   IconButton,
   Paper,
   Avatar,
@@ -23,10 +22,9 @@ import {
   LocalShipping as ShippingIcon,
   ShoppingBag as CheckoutIcon
 } from '@mui/icons-material';
+import AppButton from '../atoms/AppButton';
 
 const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, handleCheckout, handleAddToCart, handleDecreaseFromCart }) => {
-
-
 
   // Calculate totals
   const totalItems = cart.items ? cart.items.reduce((total, item) => total + item.quantity, 0) : 0;
@@ -243,7 +241,7 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
             
             {/* Action Buttons */}
             <Stack spacing={2}>
-              <Button 
+              <AppButton 
                 variant="contained"
                 fullWidth
                 size="large"
@@ -260,9 +258,9 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
                 }}
               >
                 Proceed to Checkout
-              </Button>
+              </AppButton>
               
-              <Button 
+              <AppButton 
                 variant="outlined"
                 fullWidth
                 startIcon={<DeleteIcon />}
@@ -279,7 +277,7 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
                 }}
               >
                 Clear Cart
-              </Button>
+              </AppButton>
             </Stack>
           </Paper>
         )}

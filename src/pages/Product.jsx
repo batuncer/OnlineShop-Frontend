@@ -12,7 +12,6 @@ import {
   Alert,
   CardMedia,
   CardContent,
-  Button,
   Grid,
   Chip,
   Divider,
@@ -114,13 +113,13 @@ const Product = () => {
             Error loading product
           </Typography>
           <Typography variant="body2">{error}</Typography>
-          <Button
+          <AppButton
             variant="outlined"
             sx={{ mt: 2 }}
             onClick={() => navigate("/")}
           >
             Back to Home
-          </Button>
+          </AppButton>
         </Alert>
       </Container>
     );
@@ -143,13 +142,13 @@ const Product = () => {
             The product you're looking for doesn't exist or may have been
             removed.
           </Typography>
-          <Button
+          <AppButton
             variant="contained"
             sx={{ bgcolor: "#8B4513", "&:hover": { bgcolor: "#A0522D" } }}
             onClick={() => navigate("/")}
           >
             Browse Products
-          </Button>
+          </AppButton>
         </Alert>
       </Container>
     );
@@ -409,7 +408,7 @@ const Product = () => {
                     width: "100%",
                   }}
                 >
-                  <Button
+                  <AppButton
                     variant="contained"
                     size="large"
                     startIcon={<AddShoppingCartIcon />}
@@ -435,7 +434,7 @@ const Product = () => {
                     }}
                   >
                     Add to Basket
-                  </Button>
+                  </AppButton>
                 </Box>
               </Stack>
             </CardContent>

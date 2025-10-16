@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  Button,
   Box,
   Typography,
   Chip,
@@ -81,7 +80,7 @@ const UserManagement = () => {
           <Typography variant="h5" fontWeight="bold" sx={{ color: '#8B4513' }}>
             User Management
           </Typography>
-          <Button
+          <AppButton
             variant="contained"
             startIcon={<DownloadIcon />}
             onClick={exportToCSV}
@@ -92,7 +91,7 @@ const UserManagement = () => {
             }}
           >
             Export CSV
-          </Button>
+          </AppButton>
         </Box>
       </Box>
 

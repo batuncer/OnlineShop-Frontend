@@ -5,7 +5,6 @@ import {
   Container,
   Typography,
   Box,
-  Button,
   Card,
   CardContent,
   Grid,
@@ -30,6 +29,7 @@ import {
 } from "../modules/order/orderSlice";
 
 import { clearCart } from "../modules/cart/cartSlice";
+import AppButton from "../ui/atoms/AppButton";
 
 const CheckOutPage = () => {
   const dispatch = useDispatch();
@@ -403,7 +403,7 @@ const CheckOutPage = () => {
                 </Paper>
 
                 {/* Place Order Button */}
-                <Button
+                <AppButton
                   variant="contained"
                   fullWidth
                   size="large"
@@ -431,7 +431,7 @@ const CheckOutPage = () => {
                   }
                 >
                   Place Order Now
-                </Button>
+                </AppButton>
               </>
             ) : (
               <Paper
@@ -452,7 +452,7 @@ const CheckOutPage = () => {
                 >
                   Add some items to your cart to proceed with checkout
                 </Typography>
-                <Button
+                <AppButton
                   variant="contained"
                   sx={{
                     bgcolor: "#8B4513",
@@ -461,7 +461,7 @@ const CheckOutPage = () => {
                   onClick={() => navigate("/")}
                 >
                   Continue Shopping
-                </Button>
+                </AppButton>
               </Paper>
             )}
           </CardContent>
@@ -530,7 +530,7 @@ const CheckOutPage = () => {
               </Typography>
 
               <Box sx={{ display: "flex", gap: 2 }}>
-                <Button
+                <AppButton
                   variant="contained"
                   onClick={onSubmit}
                   fullWidth
@@ -542,8 +542,8 @@ const CheckOutPage = () => {
                   }}
                 >
                   Confirm Order
-                </Button>
-                <Button
+                </AppButton>
+                <AppButton
                   variant="outlined"
                   onClick={() => setOpenModal(false)}
                   fullWidth
@@ -560,7 +560,7 @@ const CheckOutPage = () => {
                   }}
                 >
                   Cancel
-                </Button>
+                </AppButton>
               </Box>
             </Paper>
           </Box>

@@ -12,7 +12,6 @@ import {
   Avatar,
   Tooltip,
   Badge,
-  Button,
   useScrollTrigger,
   Slide,
   Paper
@@ -25,6 +24,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CartDrawer from '../molecules/CartDrawer';
 import UserMenu from '../molecules/UserMenu';
 import { addItem, clearCart, decreaseQuantity } from '../../modules/cart/cartSlice';
+import AppButton from '../atoms/AppButton';
 
 // Hide navbar on scroll component
 function HideOnScroll(props) {
@@ -231,7 +231,7 @@ function Navbar() {
               {/* Quick Login/Logout for Desktop */}
               <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                 {auth.user ? (
-                  <Button
+                  <AppButton
                     variant="outlined"
                     size="small"
                     onClick={() => {
@@ -248,9 +248,9 @@ function Navbar() {
                     }}
                   >
                     Logout
-                  </Button>
+                  </AppButton>
                 ) : (
-                  <Button
+                  <AppButton
                     variant="outlined"
                     size="small"
                     onClick={() => navigate("/login")}
@@ -264,7 +264,7 @@ function Navbar() {
                     }}
                   >
                     Login
-                  </Button>
+                  </AppButton>
                 )}
               </Box>
             </Box>
