@@ -6,7 +6,6 @@ import coffeeImage from "../../assets/coffeImage.webp";
 
 // MUI
 import {
-  Button,
   Card,
   CardContent,
   CardMedia,
@@ -19,6 +18,9 @@ import {
   Fade,
 } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
+// Atoms
+import AppButton from "../atoms/AppButton";
 
 
 const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
@@ -163,27 +165,17 @@ const ProductCard = ({ product, handleAddToBasket, handleCardClick }) => {
         </CardActionArea>
 
         <CardActions sx={{ p: 3, pt: 0 }}>
-          <Button 
+          <AppButton 
             size="medium"
-            variant="contained"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
             onClick={(e) => {
               e.stopPropagation();
               handleAddToBasket();
             }}
-            sx={{
-              bgcolor: '#8B4513',
-              py: 1.5,
-              fontWeight: 'bold',
-              borderRadius: 2,
-              '&:hover': {
-                bgcolor: '#A0522D',
-              }
-            }}
           >
             Add to Basket
-          </Button>
+          </AppButton>
         </CardActions>
       </Card>
     </Fade>

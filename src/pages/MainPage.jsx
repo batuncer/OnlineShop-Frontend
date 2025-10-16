@@ -3,7 +3,6 @@ import {
   Stack,
   Typography,
   Box,
-  Button,
   Paper,
   Grid,
   Fade,
@@ -14,10 +13,16 @@ import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 
 // Image
 import coffeeMain from "../assets/coffeeMain.webp";
+
+// Organisms
 import Products from "../ui/organism/Products";
+
+// Atoms
+import AppButton from "../ui/atoms/AppButton";
 
 export default function MainPage() {
   return (
+    
     <Fade in timeout={800}>
       <Box>
         {/* Hero Section */}
@@ -81,22 +86,8 @@ export default function MainPage() {
                   >
                     Discover the finest selection from around the world
                   </Typography>
-                  <Button
-                    variant="contained"
+                  <AppButton
                     size="large"
-                    sx={{
-                      bgcolor: "white",
-                      color: "#8B4513",
-                      fontWeight: "bold",
-                      px: 4,
-                      py: 1.5,
-                      fontSize: "1.1rem",
-                      "&:hover": {
-                        bgcolor: "#f5f5dc",
-                        transform: "translateY(-2px)",
-                      },
-                      transition: "all 0.3s ease",
-                    }}
                     onClick={() => {
                       document
                         .getElementById("products-section")
@@ -104,9 +95,10 @@ export default function MainPage() {
                           behavior: "smooth",
                         });
                     }}
+                    sx={{bgcolor:"brown"}}
                   >
                     Shop Now
-                  </Button>
+                  </AppButton>
                 </Box>
               </Box>
             </Box>

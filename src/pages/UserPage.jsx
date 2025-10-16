@@ -6,7 +6,6 @@ import {
   Container,
   Typography,
   Box,
-  Button,
   Card,
   CardContent,
   Grid,
@@ -38,14 +37,17 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import EmptyStateIcon from "@mui/icons-material/Assignment";
 import WarningIcon from "@mui/icons-material/Warning";
 
-// Import logout actions
-import { logout } from "../modules/auth/authSlice";
-
-// Import fetchMe action
+// Slices
 import { fetchMe } from "../modules/user/userSlice";
 import { getUserOrders } from "../modules/user/userSlice";
-import formatMonthYear from "../utils/cusTomDate";
 import { deleteOrderById } from "../modules/order/orderSlice";
+import { logout } from "../modules/auth/authSlice";
+
+// Utils
+import formatMonthYear from "../utils/cusTomDate";
+
+// Atoms
+import AppButton from "../ui/atoms/AppButton";
 
 export default function UserPage() {
   // Redux hooks
@@ -289,7 +291,7 @@ export default function UserPage() {
                     </Box>
                   </Box>
 
-                  <Button
+                  <AppButton
                     sx={{
                       mt: 4,
                       width: "100%",
@@ -301,12 +303,11 @@ export default function UserPage() {
                         bgcolor: "#c82333",
                       },
                     }}
-                    variant="contained"
                     startIcon={<LogoutIcon />}
                     onClick={() => dispatch(logout())}
                   >
                     Sign Out
-                  </Button>
+                  </AppButton>
                 </CardContent>
               </Card>
             </Grid>
@@ -447,7 +448,7 @@ export default function UserPage() {
                                 </Typography>
                               </TableCell>
                               <TableCell align="center">
-                                <Button
+                                <AppButton
                                   variant="outlined"
                                   color="error"
                                   size="small"
@@ -462,7 +463,7 @@ export default function UserPage() {
                                   }}
                                 >
                                   Cancel
-                                </Button>
+                                </AppButton>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -497,19 +498,11 @@ export default function UserPage() {
                       <Typography variant="body2" color="text.secondary">
                         Start shopping to see your orders here
                       </Typography>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          mt: 3,
-                          bgcolor: "#8B4513",
-                          "&:hover": {
-                            bgcolor: "#A0522D",
-                          },
-                        }}
+                      <AppButton
                         onClick={() => (window.location.href = "/")}
                       >
                         Start Shopping
-                      </Button>
+                      </AppButton>
                     </Paper>
                   )}
                 </CardContent>
@@ -580,7 +573,7 @@ export default function UserPage() {
           </DialogContent>
           
           <DialogActions sx={{ p: 3, bgcolor: '#fafafa' }}>
-            <Button 
+            <AppButton 
               onClick={handleCloseDeleteModal}
               variant="outlined"
               sx={{
@@ -593,10 +586,9 @@ export default function UserPage() {
               }}
             >
               Keep Order
-            </Button>
-            <Button 
+            </AppButton>
+            <AppButton 
               onClick={handleConfirmDelete}
-              variant="contained"
               color="error"
               disabled={isDeleting}
               startIcon={isDeleting ? <CircularProgress size={16} color="inherit" /> : <CancelIcon />}
@@ -606,7 +598,7 @@ export default function UserPage() {
               }}
             >
               {isDeleting ? 'Cancelling...' : 'Cancel Order'}
-            </Button>
+            </AppButton>
           </DialogActions>
         </Dialog>
       </Box>
