@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 
-// Components
+// Organisms
 import ProductCard from "./ProductCard";
 
 // Product slice
@@ -108,7 +108,7 @@ const Products = () => {
   return (
     <Box sx={{ mx: { xs: 2, md: 32 }, mt: 4, mb: 6 }}>
       {/* Search Bar */}
-      <Box sx={{ mb: 4 , maxWidth: 600, mx: "auto" }}>
+      <Box sx={{ mb: 4 , maxWidth: 600, mx: "auto", bgcolor:"white", borderRadius: 2 }}>
         <TextField
           fullWidth
           placeholder="Search products by name, category, or description..."
@@ -134,12 +134,12 @@ const Products = () => {
 
       <Box sx={{ mb: 3, textAlign: "center" }}>
         {searchTerm ? (
-          <Typography variant="h6" sx={{ color: "#8B4513" }}>
+          <Typography variant="h6" sx={{ color: "white" }}>
             {filteredProducts.length} product
             {filteredProducts.length !== 1 ? "s" : ""} found for "{searchTerm}"
           </Typography>
         ) : (
-          <Typography variant="h6" sx={{ color: "#8B4513" }}>
+          <Typography variant="h6" sx={{color: "white" }}>
             {pageInfo.totalElements} product{pageInfo.totalElements !== 1 ? "s" : ""} available
           </Typography>
         )}
@@ -160,7 +160,6 @@ const Products = () => {
             sx={{
               p: 4,
               borderRadius: 3,
-              bgcolor: "#f5f5dc",
               border: "1px solid #8B4513",
             }}
           >
@@ -245,7 +244,7 @@ const Products = () => {
 
           {searchTerm && filteredProducts.length > 10 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2">
                 Showing all {filteredProducts.length} search results
               </Typography>
             </Box>
@@ -259,7 +258,6 @@ const Products = () => {
               p: 6,
               textAlign: "center",
               borderRadius: 3,
-              bgcolor: "#f5f5dc",
               border: "1px solid #8B4513",
             }}
           >

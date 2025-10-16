@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../modules/product/productSlice";
-import { addItem } from "../modules/cart/cartSlice";
+
 // MUI Components
 import {
   Container,
@@ -21,8 +20,6 @@ import {
   Breadcrumbs,
   Link,
 } from "@mui/material";
-
-// MUI Icons
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
@@ -31,6 +28,10 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // Assets
 import teaImage from "../assets/teaImage.jpg";
 import coffeeImage from "../assets/coffeImage.webp";
+
+// Slices
+import { fetchProductById } from "../modules/product/productSlice";
+import { addItem } from "../modules/cart/cartSlice";
 
 const Product = () => {
   const { id: productId } = useParams();
@@ -143,8 +144,6 @@ const Product = () => {
             removed.
           </Typography>
           <AppButton
-            variant="contained"
-            sx={{ bgcolor: "#8B4513", "&:hover": { bgcolor: "#A0522D" } }}
             onClick={() => navigate("/")}
           >
             Browse Products
@@ -409,23 +408,10 @@ const Product = () => {
                   }}
                 >
                   <AppButton
-                    variant="contained"
                     size="large"
                     startIcon={<AddShoppingCartIcon />}
                     onClick={handleAddToCart}
                     sx={{
-                      py: 2,
-                      px: 4,
-                      fontSize: "1.2rem",
-                      fontWeight: "bold",
-                      bgcolor: "#8B4513",
-                      borderRadius: 3,
-                      boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)",
-                      "&:hover": {
-                        bgcolor: "#A0522D",
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 6px 16px rgba(139, 69, 19, 0.4)",
-                      },
                       "&:disabled": {
                         bgcolor: "#ccc",
                         color: "#666",

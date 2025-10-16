@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   Box, 
-  Typography, 
   Paper, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem,
-  Alert,
   Container,
   Avatar,
+  Alert,
   Chip
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
+
+// Atoms
 import AppTextField from '../atoms/AppTextField';
 import AppButton from '../atoms/AppButton';
+import AppSelect from '../atoms/AppSelect';
+import AppText from '../atoms/AppText';
+
+// Redux actions
 import { addProduct } from '../../modules/product/productSlice';
 import { fetchSuppliers } from '../../modules/supplier/supplierSlice';
 
@@ -44,16 +45,23 @@ const ProductAdd = () => {
     dispatch(fetchSuppliers());
   }, [dispatch]);
 
-  const brewColors = [
+  // Options for selects
+  const brewColorOptions = [
     { value: 'AMBER', label: 'Amber' },
     { value: 'DARK_BROWN', label: 'Dark Brown' },
     { value: 'GOLDEN_BROWN', label: 'Golden Brown' }
   ];
 
-  const categories = [
+  const categoryOptions = [
     { value: 'TEA', label: 'Tea' },
     { value: 'COFFEE', label: 'Coffee' }
   ];
+
+  // Transform suppliers for select component
+  const supplierOptions = suppliers?.data?.map(supplier => ({
+    value: supplier.id,
+    label: supplier.name
+  })) || [];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -138,7 +146,7 @@ const ProductAdd = () => {
           sx={{
             p: 4,
             mb: 4,
-            background: "linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)",
+            background:  "#c6a850ff",
             color: "white",
             borderRadius: 3,
           }}
@@ -147,21 +155,21 @@ const ProductAdd = () => {
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
                 sx={{
-                  bgcolor: "rgba(255,255,255,0.2)",
-                  mr: 3,
                   width: 56,
                   height: 56,
+                  bgcolor: "rgba(255,255,255,0.2)",
+                  mr: 3,
                 }}
               >
                 <AddIcon fontSize="large" />
               </Avatar>
               <Box>
-                <Typography variant="h4" fontWeight="bold" gutterBottom>
+                <AppText variant="h4" fontWeight="bold" gutterBottom color="inherit">
                   Product Management
-                </Typography>
-                <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
+                </AppText>
+                <AppText variant="subtitle1" sx={{ opacity: 0.9 }} color="inherit">
                   Add new products to your inventory
-                </Typography>
+                </AppText>
               </Box>
             </Box>
             <Chip
@@ -187,98 +195,62 @@ const ProductAdd = () => {
           )}
 
           <Box component="form" onSubmit={handleSubmit}>
-            {/* Supplier Selection */}
-            <Box sx={{ mb: 3 }}>
-              <FormControl fullWidth error={!!formErrors.supplierId}>
-                <InputLabel>Supplier *</InputLabel>
-                <Select
-                  name="supplierId"
-                  value={formData.supplierId}
-                  onChange={handleInputChange}
-                  label="Supplier *"
-                  disabled={suppliersLoading}
-                  sx={{ bgcolor: 'white' }}
-                >
-                  {suppliers?.data?.map((supplier) => (
-                    <MenuItem key={supplier.id} value={supplier.id}>
-                      {supplier.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formErrors.supplierId && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
-                    {formErrors.supplierId}
-                  </Typography>
-                )}
-              </FormControl>
-            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              
+              {/* Supplier Selection  */}
+              <AppSelect
+                label="Supplier"
+                name="supplierId"
+                value={formData.supplierId}
+                onChange={handleInputChange}
+                options={supplierOptions}
+                error={!!formErrors.supplierId}
+                helperText={formErrors.supplierId}
+                disabled={suppliersLoading}
+                required
+                placeholder="Select a supplier"
+              />
 
-            {/* Type Name */}
-            <Box sx={{ mb: 3 }}>
+              {/* Category  */}
+              <AppSelect
+                label="Category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                options={categoryOptions}
+                error={!!formErrors.category}
+                helperText={formErrors.category}
+                required
+                placeholder="Select category"
+              />
+
+              {/* Type Name  */}
               <AppTextField
                 fullWidth
-                label="Type Name"
+                label="Product Name"
                 name="typeName"
                 value={formData.typeName}
                 onChange={handleInputChange}
                 error={!!formErrors.typeName}
                 helperText={formErrors.typeName}
                 required
+                placeholder="Enter product name"
               />
-            </Box>
 
-            {/* Category */}
-            <Box sx={{ mb: 3 }}>
-              <FormControl fullWidth error={!!formErrors.category}>
-                <InputLabel>Category *</InputLabel>
-                <Select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  label="Category *"
-                  sx={{ bgcolor: 'white' }}
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category.value} value={category.value}>
-                      {category.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formErrors.category && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
-                    {formErrors.category}
-                  </Typography>
-                )}
-              </FormControl>
-            </Box>
+              {/* Brew Color  */}
+              <AppSelect
+                label="Brew Color"
+                name="brewColor"
+                value={formData.brewColor}
+                onChange={handleInputChange}
+                options={brewColorOptions}
+                error={!!formErrors.brewColor}
+                helperText={formErrors.brewColor}
+                required
+                placeholder="Select brew color"
+              />
 
-            {/* Brew Color */}
-            <Box sx={{ mb: 3 }}>
-              <FormControl fullWidth error={!!formErrors.brewColor}>
-                <InputLabel>Brew Color *</InputLabel>
-                <Select
-                  name="brewColor"
-                  value={formData.brewColor}
-                  onChange={handleInputChange}
-                  label="Brew Color *"
-                  sx={{ bgcolor: 'white' }}
-                >
-                  {brewColors.map((color) => (
-                    <MenuItem key={color.value} value={color.value}>
-                      {color.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formErrors.brewColor && (
-                  <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
-                    {formErrors.brewColor}
-                  </Typography>
-                )}
-              </FormControl>
-            </Box>
-
-            {/* Amount Grams */}
-            <Box sx={{ mb: 3 }}>
+              {/* Amount Grams */}
               <AppTextField
                 fullWidth
                 label="Amount (Grams)"
@@ -290,11 +262,10 @@ const ProductAdd = () => {
                 error={!!formErrors.amountGrams}
                 helperText={formErrors.amountGrams}
                 required
+                placeholder="Enter amount in grams"
               />
-            </Box>
 
-            {/* Price GBP */}
-            <Box sx={{ mb: 3 }}>
+              {/* Price GBP*/}
               <AppTextField
                 fullWidth
                 label="Price (GBP)"
@@ -306,43 +277,10 @@ const ProductAdd = () => {
                 error={!!formErrors.priceGbp}
                 helperText={formErrors.priceGbp}
                 required
+                placeholder="Enter price"
               />
-            </Box>
 
-            {/* Caffeine Mg Per G */}
-            <Box sx={{ mb: 3 }}>
-              <AppTextField
-                fullWidth
-                label="Caffeine (mg per gram)"
-                name="caffeineMgPerG"
-                type="number"
-                inputProps={{ min: 0 }}
-                value={formData.caffeineMgPerG}
-                onChange={handleInputChange}
-                error={!!formErrors.caffeineMgPerG}
-                helperText={formErrors.caffeineMgPerG}
-                required
-              />
-            </Box>
-
-            {/* Recommended Grams Per Cup */}
-            <Box sx={{ mb: 3 }}>
-              <AppTextField
-                fullWidth
-                label="Recommended Grams Per Cup"
-                name="recommendedGramsPerCup"
-                type="number"
-                inputProps={{ min: 1 }}
-                value={formData.recommendedGramsPerCup}
-                onChange={handleInputChange}
-                error={!!formErrors.recommendedGramsPerCup}
-                helperText={formErrors.recommendedGramsPerCup}
-                required
-              />
-            </Box>
-
-            {/* Stock Quantity */}
-            <Box sx={{ mb: 3 }}>
+              {/* Stock Quantity */}
               <AppTextField
                 fullWidth
                 label="Stock Quantity"
@@ -354,22 +292,50 @@ const ProductAdd = () => {
                 error={!!formErrors.stockQuantity}
                 helperText={formErrors.stockQuantity}
                 required
+                placeholder="Enter stock quantity"
               />
-            </Box>
 
-            {/* Main Medicinal Use */}
-            <Box sx={{ mb: 3 }}>
+              {/* Caffeine Mg Per G */}
+              <AppTextField
+                fullWidth
+                label="Caffeine (mg per gram)"
+                name="caffeineMgPerG"
+                type="number"
+                inputProps={{ min: 0 }}
+                value={formData.caffeineMgPerG}
+                onChange={handleInputChange}
+                error={!!formErrors.caffeineMgPerG}
+                helperText={formErrors.caffeineMgPerG}
+                required
+                placeholder="Enter caffeine content"
+              />
+
+              {/* Recommended Grams Per Cup */}
+              <AppTextField
+                fullWidth
+                label="Recommended Grams Per Cup"
+                name="recommendedGramsPerCup"
+                type="number"
+                inputProps={{ min: 1 }}
+                value={formData.recommendedGramsPerCup}
+                onChange={handleInputChange}
+                error={!!formErrors.recommendedGramsPerCup}
+                helperText={formErrors.recommendedGramsPerCup}
+                required
+                placeholder="Enter recommended amount"
+              />
+
+              {/* Main Medicinal Use  */}
               <AppTextField
                 fullWidth
                 label="Main Medicinal Use"
                 name="mainMedicinalUse"
                 value={formData.mainMedicinalUse}
                 onChange={handleInputChange}
+                placeholder="Enter medicinal benefits (optional)"
               />
-            </Box>
 
-            {/* Description */}
-            <Box sx={{ mb: 4 }}>
+              {/* Description  */}
               <AppTextField
                 fullWidth
                 label="Description"
@@ -381,30 +347,22 @@ const ProductAdd = () => {
                 error={!!formErrors.description}
                 helperText={formErrors.description}
                 required
+                placeholder="Enter product description"
               />
-            </Box>
 
-            {/* Submit Button */}
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <AppButton
-                type="submit"
-                onClick={handleSubmit}
-                variant="contained"
-                size="large"
-                disabled={loading}
-                sx={{ 
-                  py: 2,
-                  px: 6,
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  background: "linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)",
-                  '&:hover': {
-                    background: "linear-gradient(135deg, #1565c0 0%, #1976d2 100%)",
-                  }
-                }}
-              >
-                {loading ? 'Adding Product...' : 'Add Product'}
-              </AppButton>
+              {/* Submit Button  */}
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <AppButton
+                  type="submit"
+                  onClick={handleSubmit}
+                  size="large"
+                  disabled={loading}
+                  startIcon={<AddIcon />}
+                >
+                  {loading ? 'Adding Product...' : 'Add Product'}
+                </AppButton>
+              </Box>
+
             </Box>
           </Box>
         </Paper>

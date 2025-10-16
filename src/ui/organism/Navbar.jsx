@@ -23,8 +23,13 @@ import PersonIcon from '@mui/icons-material/Person';
 // Molecules
 import CartDrawer from '../molecules/CartDrawer';
 import UserMenu from '../molecules/UserMenu';
-import { addItem, clearCart, decreaseQuantity } from '../../modules/cart/cartSlice';
+
+// Atoms
 import AppButton from '../atoms/AppButton';
+
+// Slice
+import { addItem, clearCart, decreaseQuantity } from '../../modules/cart/cartSlice';
+
 
 // Hide navbar on scroll component
 function HideOnScroll(props) {

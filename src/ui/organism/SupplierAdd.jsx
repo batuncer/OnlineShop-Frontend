@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import useState from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   Box, 
@@ -10,9 +10,15 @@ import {
   Chip
 } from '@mui/material';
 import { Business as BusinessIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
+
+// Atoms
 import AppTextField from '../atoms/AppTextField';
 import AppButton from '../atoms/AppButton';
+
+// Slice
 import { addSupplier } from '../../modules/supplier/supplierSlice';
+
 
 const SupplierAdd = () => {
   const dispatch = useDispatch();
@@ -80,7 +86,7 @@ const SupplierAdd = () => {
           sx={{
             p: 4,
             mb: 4,
-            background: "linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%)",
+            background: "#c6a850ff",
             color: "white",
             borderRadius: 3,
           }}
@@ -148,19 +154,9 @@ const SupplierAdd = () => {
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <AppButton
                 type="submit"
-                variant="contained"
                 size="large"
                 disabled={loading}
-                sx={{ 
-                  py: 2,
-                  px: 6,
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  background: "linear-gradient(135deg, #2e7d32 0%, #66bb6a 100%)",
-                  '&:hover': {
-                    background: "linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)",
-                  }
-                }}
+                startIcon={<AddIcon />}
               >
                 {loading ? 'Adding Supplier...' : 'Add Supplier'}
               </AppButton>

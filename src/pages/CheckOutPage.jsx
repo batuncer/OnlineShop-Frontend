@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+//MUI
 import {
   Container,
   Typography,
@@ -22,13 +24,15 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorIcon from "@mui/icons-material/Error";
 
+// Slices
 import {
   fetchOrderPreview,
   createOrder,
   resetOrderState,
 } from "../modules/order/orderSlice";
-
 import { clearCart } from "../modules/cart/cartSlice";
+
+// Atoms
 import AppButton from "../ui/atoms/AppButton";
 
 const CheckOutPage = () => {
@@ -64,6 +68,7 @@ const CheckOutPage = () => {
   const onSubmit = () => {
     if (!user) {
       setAuthWarning(true);
+      setOpenModal(false)
       return;
     }
 
@@ -404,31 +409,13 @@ const CheckOutPage = () => {
 
                 {/* Place Order Button */}
                 <AppButton
-                  variant="contained"
                   fullWidth
                   size="large"
-                  sx={{
-                    py: 2,
-                    fontSize: "1.3rem",
-                    fontWeight: "bold",
-                    bgcolor: "#8B4513",
-                    borderRadius: 3,
-                    boxShadow: "0 4px 12px rgba(139, 69, 19, 0.3)",
-                    "&:hover": {
-                      bgcolor: "#A0522D",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 6px 16px rgba(139, 69, 19, 0.4)",
-                    },
-                    "&:disabled": {
-                      bgcolor: "#ccc",
-                      color: "#666",
-                    },
-                    transition: "all 0.3s ease",
-                  }}
                   onClick={() => setOpenModal(true)}
                   disabled={
                     !preview || !preview.items || preview.items.length === 0
                   }
+                  startIcon={<ShoppingCartCheckoutIcon />}
                 >
                   Place Order Now
                 </AppButton>
@@ -453,11 +440,6 @@ const CheckOutPage = () => {
                   Add some items to your cart to proceed with checkout
                 </Typography>
                 <AppButton
-                  variant="contained"
-                  sx={{
-                    bgcolor: "#8B4513",
-                    "&:hover": { bgcolor: "#A0522D" },
-                  }}
                   onClick={() => navigate("/")}
                 >
                   Continue Shopping
@@ -531,15 +513,8 @@ const CheckOutPage = () => {
 
               <Box sx={{ display: "flex", gap: 2 }}>
                 <AppButton
-                  variant="contained"
                   onClick={onSubmit}
                   fullWidth
-                  sx={{
-                    py: 1.5,
-                    bgcolor: "#8B4513",
-                    fontWeight: "bold",
-                    "&:hover": { bgcolor: "#A0522D" },
-                  }}
                 >
                   Confirm Order
                 </AppButton>
@@ -547,17 +522,7 @@ const CheckOutPage = () => {
                   variant="outlined"
                   onClick={() => setOpenModal(false)}
                   fullWidth
-                  sx={{
-                    py: 1.5,
-                    borderColor: "#8B4513",
-                    color: "#8B4513",
-                    fontWeight: "bold",
-                    "&:hover": {
-                      borderColor: "#A0522D",
-                      color: "#A0522D",
-                      bgcolor: "rgba(139, 69, 19, 0.04)",
-                    },
-                  }}
+                  sx={{ borderColor: '#bb0202ff', color: '#dc0000ff', '&:hover': { borderColor: '#ff0000ff', backgroundColor: '#f0e6d2' } }}
                 >
                   Cancel
                 </AppButton>

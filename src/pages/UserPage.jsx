@@ -6,7 +6,6 @@ import {
   Container,
   Typography,
   Box,
-  Button,
   Card,
   CardContent,
   Grid,
@@ -38,14 +37,17 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import EmptyStateIcon from "@mui/icons-material/Assignment";
 import WarningIcon from "@mui/icons-material/Warning";
 
-// Import logout actions
-import { logout } from "../modules/auth/authSlice";
-
-// Import fetchMe action
+// Slices
 import { fetchMe } from "../modules/user/userSlice";
 import { getUserOrders } from "../modules/user/userSlice";
-import formatMonthYear from "../utils/cusTomDate";
 import { deleteOrderById } from "../modules/order/orderSlice";
+import { logout } from "../modules/auth/authSlice";
+
+// Utils
+import formatMonthYear from "../utils/cusTomDate";
+
+// Atoms
+import AppButton from "../ui/atoms/AppButton";
 
 export default function UserPage() {
   // Redux hooks
@@ -301,7 +303,6 @@ export default function UserPage() {
                         bgcolor: "#c82333",
                       },
                     }}
-                    variant="contained"
                     startIcon={<LogoutIcon />}
                     onClick={() => dispatch(logout())}
                   >
@@ -498,14 +499,6 @@ export default function UserPage() {
                         Start shopping to see your orders here
                       </Typography>
                       <AppButton
-                        variant="contained"
-                        sx={{
-                          mt: 3,
-                          bgcolor: "#8B4513",
-                          "&:hover": {
-                            bgcolor: "#A0522D",
-                          },
-                        }}
                         onClick={() => (window.location.href = "/")}
                       >
                         Start Shopping
@@ -596,7 +589,6 @@ export default function UserPage() {
             </AppButton>
             <AppButton 
               onClick={handleConfirmDelete}
-              variant="contained"
               color="error"
               disabled={isDeleting}
               startIcon={isDeleting ? <CircularProgress size={16} color="inherit" /> : <CancelIcon />}

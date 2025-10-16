@@ -1,6 +1,4 @@
-import React from 'react';
-
-// MUI ui
+// MUI components and icons
 import {
   Drawer,
   Box,
@@ -11,7 +9,6 @@ import {
   Avatar,
   Chip,
   Stack,
-  Badge
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -22,6 +19,8 @@ import {
   LocalShipping as ShippingIcon,
   ShoppingBag as CheckoutIcon
 } from '@mui/icons-material';
+
+// Atom
 import AppButton from '../atoms/AppButton';
 
 const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, handleCheckout, handleAddToCart, handleDecreaseFromCart }) => {
@@ -242,39 +241,20 @@ const CartDrawer = ({ drawerOpen, cart, setDrawerOpen, handleRemoveFromCart, han
             {/* Action Buttons */}
             <Stack spacing={2}>
               <AppButton 
-                variant="contained"
                 fullWidth
                 size="large"
                 startIcon={<CheckoutIcon />}
                 onClick={handleCheckout}
-                sx={{ 
-                  py: 1.5,
-                  bgcolor: '#8B4513',
-                  fontWeight: 'bold',
-                  fontSize: '1.1rem',
-                  '&:hover': {
-                    bgcolor: '#A0522D'
-                  }
-                }}
               >
                 Proceed to Checkout
               </AppButton>
               
               <AppButton 
-                variant="outlined"
                 fullWidth
                 startIcon={<DeleteIcon />}
                 onClick={handleRemoveFromCart}
-                sx={{ 
-                  py: 1,
-                  color: '#dc3545',
-                  borderColor: '#dc3545',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    bgcolor: 'rgba(220, 53, 69, 0.1)',
-                    borderColor: '#c82333'
-                  }
-                }}
+                sx={{ bgcolor: '#ff8400b8', '&:hover': { bgcolor: '#d80202ff' } }}
+             
               >
                 Clear Cart
               </AppButton>

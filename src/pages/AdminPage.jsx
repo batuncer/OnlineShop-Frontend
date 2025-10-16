@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// MUI Components
 import {
   Box,
   Container,
@@ -15,10 +17,14 @@ import {
   Inventory as InventoryIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
+
+// Organism
 import UserManagement from "../ui/organism/UserManagment";
 import SupplierAdd from "../ui/organism/SupplierAdd";
 import ProductAdd from "../ui/organism/ProductAdd";
 
+
+// Tab Panel Component
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -35,6 +41,7 @@ function TabPanel(props) {
   );
 }
 
+// Main Admin Page Component
 const AdminPage = () => {
   const [tabValue, setTabValue] = useState(0);
 

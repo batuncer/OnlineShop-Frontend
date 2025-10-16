@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+// MUI
 import {
   Paper,
   Table,
@@ -20,7 +22,12 @@ import {
   CalendarToday as CalendarIcon,
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
+
+// Slice
 import { fetchUsers } from '../../modules/user/userSlice';
+
+// Atoms
+import AppButton from '../atoms/AppButton';
 
 const UserManagement = () => {
   const users = useSelector((state) => state.user.users);
@@ -81,14 +88,8 @@ const UserManagement = () => {
             User Management
           </Typography>
           <AppButton
-            variant="contained"
             startIcon={<DownloadIcon />}
             onClick={exportToCSV}
-            sx={{
-              bgcolor: '#8B4513',
-              '&:hover': { bgcolor: '#A0522D' },
-              borderRadius: 2,
-            }}
           >
             Export CSV
           </AppButton>
