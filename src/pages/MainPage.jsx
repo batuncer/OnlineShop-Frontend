@@ -95,7 +95,7 @@ export default function MainPage() {
                           behavior: "smooth",
                         });
                     }}
-                    sx={{bgcolor:"brown"}}
+                    sx={{ bgcolor: "rgba(180, 154, 78, 1)" }}
                   >
                     Shop Now
                   </AppButton>

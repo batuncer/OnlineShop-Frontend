@@ -134,12 +134,12 @@ const Products = () => {
 
       <Box sx={{ mb: 3, textAlign: "center" }}>
         {searchTerm ? (
-          <Typography variant="h6" sx={{ color: "white" }}>
+          <Typography variant="h6" sx={{ color: "#8B4513" }}>
             {filteredProducts.length} product
             {filteredProducts.length !== 1 ? "s" : ""} found for "{searchTerm}"
           </Typography>
         ) : (
-          <Typography variant="h6" sx={{color: "white" }}>
+          <Typography variant="h6" sx={{ color: "#8B4513" }}>
             {pageInfo.totalElements} product{pageInfo.totalElements !== 1 ? "s" : ""} available
           </Typography>
         )}
