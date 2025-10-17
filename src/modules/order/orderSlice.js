@@ -113,7 +113,6 @@ const orderSlice = createSlice({
         s.loading = false;
         s.orderResult = a.payload.data;
         s.successMessage = a.payload.message;
-        console.log("Order placed successfully:", a.payload.data);
       })
       .addCase(createOrder.rejected, (s, a) => {
         s.loading = false;

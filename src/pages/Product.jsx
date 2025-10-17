@@ -33,6 +33,9 @@ import coffeeImage from "../assets/coffeImage.webp";
 import { fetchProductById } from "../modules/product/productSlice";
 import { addItem } from "../modules/cart/cartSlice";
 
+// Atom
+import AppButton from "../ui/atoms/AppButton";
+
 const Product = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();

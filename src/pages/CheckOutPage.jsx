@@ -125,7 +125,7 @@ const CheckOutPage = () => {
   if (successMessage) {
     return (
       <Fade in timeout={800}>
-        <Container maxWidth="md" sx={{ mt: 8 }}>
+        <Container maxWidth="md" sx={{  mb: 12}}>
           <Paper
             elevation={8}
             sx={{
@@ -133,12 +133,12 @@ const CheckOutPage = () => {
               textAlign: "center",
               borderRadius: 4,
               background: "linear-gradient(145deg, #e8f5e8 0%, #f1f8e9 100%)",
-              border: "2px solid #4caf50",
+              border: "2px solid #8B4513",
             }}
           >
             <Avatar
               sx={{
-                bgcolor: "success.main",
+                bgcolor: "#8B4513",
                 width: 80,
                 height: 80,
                 mx: "auto",
@@ -149,7 +149,7 @@ const CheckOutPage = () => {
             </Avatar>
             <Typography
               variant="h4"
-              color="success.main"
+              color="#8B4513"
               gutterBottom
               fontWeight="bold"
             >
@@ -157,12 +157,12 @@ const CheckOutPage = () => {
             </Typography>
             <Typography
               variant="body1"
-              color="text.secondary"
+              color="#8B4513"
               sx={{ fontSize: "1.1rem" }}
             >
               {successMessage}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+            <Typography variant="body2" color="#8B4513" sx={{ mt: 2 }}>
               Redirecting to home page...
             </Typography>
           </Paper>
