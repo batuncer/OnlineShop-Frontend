@@ -31,6 +31,7 @@ import {
   resetOrderState,
 } from "../modules/order/orderSlice";
 import { clearCart } from "../modules/cart/cartSlice";
+import { getUserOrders } from "../modules/user/userSlice";
 
 // Atoms
 import AppButton from "../ui/atoms/AppButton";
@@ -45,6 +46,13 @@ const CheckOutPage = () => {
   );
   const [openModal, setOpenModal] = useState(false);
   const [authWarning, setAuthWarning] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getUserOrders());
+    }
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (items && items.length > 0) {
@@ -383,8 +391,35 @@ const CheckOutPage = () => {
                         </Typography>
                       </Paper>
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Paper
+                        sx={{
+                          p: 3,
+                          textAlign: "center",
+                          bgcolor: "#f9f9f9",
+                          border: "1px solid #8B4513",
+                          borderRadius: 2,
+                        }}
+                      >
+                        <Typography
+                          variant="body1"
+                          color="text.secondary"
+                          gutterBottom
+                        >
+                          Total Weight
+                        </Typography>
+                        <Typography
+                          variant="h5"
+                          fontWeight="bold"
+                          sx={{ color: "#8B4513" }}
+                        >
+                          {preview.totalWeight}gr
+                        </Typography>
+                      </Paper>
+                    </Grid>
                   </Grid>
                 </Box>
+                
 
                 {/* Total */}
                 <Paper

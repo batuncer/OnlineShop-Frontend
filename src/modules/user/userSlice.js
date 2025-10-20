@@ -7,7 +7,6 @@ import { API_BASE } from "../../config";
 // Utility to get auth header with token
 import { authHeader } from "../../utils/authHeader"
 
-
 // Fetch current user info
 export const fetchMe = createAsyncThunk(
   "auth/me",

@@ -13,47 +13,102 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import { Search as SearchIcon } from "@mui/icons-material";
+import { Search as SearchIcon, Clear as ClearIcon } from "@mui/icons-material";
 
 // Organisms
 import ProductCard from "./ProductCard";
 
 // Product slice
-import { fetchProducts, setCurrentPage } from "../../modules/product/productSlice";
+import { 
+  fetchProducts, 
+  searchProducts, 
+  setCurrentPage, 
+  setSearchPage,
+  clearSearch,
+  setSearchQuery
+} from "../../modules/product/productSlice";
 
 // Cart slice
 import { addItem } from "../../modules/cart/cartSlice";
 
 const Products = () => {
-  const { products, pageInfo, loading, error } = useSelector((state) => state.product);
+  const { 
+    products, 
+    searchResults, 
+    isSearching, 
+    searchQuery,
+    pageInfo, 
+    searchPageInfo,
+    loading, 
+    searchLoading, 
+    error 
+  } = useSelector((state) => state.product);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [localSearchTerm, setLocalSearchTerm] = React.useState("");
+  const [searchTimeout, setSearchTimeout] = React.useState(null);
 
   // Fetch products on component mount and when page changes
   React.useEffect(() => {
-    dispatch(fetchProducts({ page: pageInfo.page, size: pageInfo.size }));
-  }, [dispatch, pageInfo.page, pageInfo.size]);
+    if (!isSearching) {
+      dispatch(fetchProducts({ page: pageInfo.page, size: pageInfo.size }));
+    }
+  }, [dispatch, pageInfo.page, pageInfo.size, isSearching]);
 
+  // Handle search with debounce
+  React.useEffect(() => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
 
-  const productList = products || [];
-  
-  // Filter products based on search term
-  const filteredProducts = productList.filter(
-    (product) =>
-      product.typeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const timeout = setTimeout(() => {
+      if (localSearchTerm.trim()) {
+        dispatch(setSearchQuery(localSearchTerm.trim()));
+        dispatch(searchProducts({ 
+          query: localSearchTerm.trim(), 
+          page: 0, 
+          size: searchPageInfo.size 
+        }));
+      } else {
+        dispatch(clearSearch());
+      }
+    }, 500); // 500ms debounce
+
+    setSearchTimeout(timeout);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [localSearchTerm, dispatch, searchPageInfo.size]);
+
+  // Get current data based on search state
+  const currentProducts = isSearching ? searchResults : products;
+  const currentPageInfo = isSearching ? searchPageInfo : pageInfo;
+  const currentLoading = isSearching ? searchLoading : loading;
 
   // Handle page change
   const handlePageChange = (event, newPage) => {
-    // MUI Pagination is 1-based, convert to 0-based for API
     const apiPage = newPage - 1;
-    console.log("Page change clicked:", { newPage, apiPage });
-    dispatch(setCurrentPage(apiPage));
-    // Clear search when changing pages
-    setSearchTerm("");
+    
+    if (isSearching) {
+      dispatch(setSearchPage(apiPage));
+      dispatch(searchProducts({ 
+        query: searchQuery, 
+        page: apiPage, 
+        size: searchPageInfo.size 
+      }));
+    } else {
+      dispatch(setCurrentPage(apiPage));
+    }
+  };
+
+  // Handle clearing search
+  const handleClearSearch = () => {
+    setLocalSearchTerm("");
+    dispatch(clearSearch());
   };
 
   // Handle adding product to basket
@@ -72,7 +127,7 @@ const Products = () => {
     navigate(`/product/${productId}`);
   };
 
-  if (loading) {
+  if (currentLoading && (!currentProducts || currentProducts.length === 0)) {
     return (
       <Box sx={{ mx: { xs: 2, md: 8 }, mt: 8 }}>
         <Box
@@ -86,7 +141,7 @@ const Products = () => {
           <Box sx={{ textAlign: "center" }}>
             <CircularProgress size={60} sx={{ mb: 2, color: "#8B4513" }} />
             <Typography variant="h6" color="text.secondary">
-              Loading delicious products...
+              {isSearching ? "Searching products..." : "Loading delicious products..."}
             </Typography>
           </Box>
         </Box>
@@ -108,16 +163,28 @@ const Products = () => {
   return (
     <Box sx={{ mx: { xs: 2, md: 32 }, mt: 4, mb: 6 }}>
       {/* Search Bar */}
-      <Box sx={{ mb: 4 , maxWidth: 600, mx: "auto", bgcolor:"white", borderRadius: 2 }}>
+      <Box sx={{ mb: 4, maxWidth: 600, mx: "auto", bgcolor: "white", borderRadius: 2 }}>
         <TextField
           fullWidth
           placeholder="Search products by name, category, or description..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={localSearchTerm}
+          onChange={(e) => setLocalSearchTerm(e.target.value)}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon sx={{ color: "#8B4513" }} />
+              </InputAdornment>
+            ),
+            endAdornment: localSearchTerm && (
+              <InputAdornment position="end">
+                <ClearIcon 
+                  sx={{ 
+                    color: "#8B4513", 
+                    cursor: "pointer",
+                    "&:hover": { color: "#A0522D" }
+                  }}
+                  onClick={handleClearSearch}
+                />
               </InputAdornment>
             ),
           }}
@@ -132,28 +199,29 @@ const Products = () => {
         />
       </Box>
 
+      {/* Results Info */}
       <Box sx={{ mb: 3, textAlign: "center" }}>
-        {searchTerm ? (
+        {isSearching ? (
           <Typography variant="h6" sx={{ color: "#8B4513" }}>
-            {filteredProducts.length} product
-            {filteredProducts.length !== 1 ? "s" : ""} found for "{searchTerm}"
+            {currentPageInfo.totalElements} result
+            {currentPageInfo.totalElements !== 1 ? "s" : ""} found for "{searchQuery}"
           </Typography>
         ) : (
           <Typography variant="h6" sx={{ color: "#8B4513" }}>
-            {pageInfo.totalElements} product{pageInfo.totalElements !== 1 ? "s" : ""} available
+            {currentPageInfo.totalElements} product{currentPageInfo.totalElements !== 1 ? "s" : ""} available
           </Typography>
         )}
 
-        {!searchTerm && pageInfo.totalPages > 1 && (
+        {currentPageInfo.totalPages > 1 && (
           <Typography variant="body2" color="text.secondary">
-            Page {pageInfo.page + 1} of {pageInfo.totalPages} • Showing{" "}
-            {pageInfo.numberOfElements} products
+            Page {currentPageInfo.page + 1} of {currentPageInfo.totalPages} • Showing{" "}
+            {currentPageInfo.numberOfElements} products
           </Typography>
         )}
       </Box>
 
       {/* No Results Message */}
-      {filteredProducts.length === 0 && searchTerm && (
+      {currentProducts.length === 0 && isSearching && !currentLoading && (
         <Box sx={{ textAlign: "center", mt: 4, mb: 4 }}>
           <Paper
             elevation={2}
@@ -164,7 +232,7 @@ const Products = () => {
             }}
           >
             <Typography variant="h6" sx={{ color: "#8B4513", mb: 1 }}>
-              No products found for "{searchTerm}"
+              No products found for "{searchQuery}"
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Try adjusting your search criteria or{" "}
@@ -176,7 +244,7 @@ const Products = () => {
                   textDecoration: "underline",
                   "&:hover": { color: "#A0522D" },
                 }}
-                onClick={() => setSearchTerm("")}
+                onClick={handleClearSearch}
               >
                 clear search
               </Box>
@@ -185,7 +253,8 @@ const Products = () => {
         </Box>
       )}
 
-      {(searchTerm ? filteredProducts : productList).length > 0 ? (
+      {/* Products Grid */}
+      {currentProducts.length > 0 ? (
         <>
           <Box
             sx={{
@@ -196,7 +265,7 @@ const Products = () => {
               mb: 4,
             }}
           >
-            {(searchTerm ? filteredProducts : productList).map((product) => (
+            {currentProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={{
@@ -212,15 +281,16 @@ const Products = () => {
             ))}
           </Box>
 
-          {/* Pagination - Only show when not searching */}
-          {!searchTerm && pageInfo.totalPages > 1 && (
+          {/* Pagination */}
+          {currentPageInfo.totalPages > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
               <Pagination
-                count={pageInfo.totalPages}
-                page={pageInfo.page + 1}
+                count={currentPageInfo.totalPages}
+                page={currentPageInfo.page + 1}
                 onChange={handlePageChange}
                 color="primary"
                 size="large"
+                disabled={currentLoading}
                 sx={{
                   "& .MuiPaginationItem-root": {
                     color: "#8B4513",
@@ -241,17 +311,9 @@ const Products = () => {
               />
             </Box>
           )}
-
-          {searchTerm && filteredProducts.length > 10 && (
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-              <Typography variant="body2">
-                Showing all {filteredProducts.length} search results
-              </Typography>
-            </Box>
-          )}
         </>
       ) : (
-        !searchTerm && (
+        !isSearching && !loading && (
           <Paper
             elevation={2}
             sx={{
@@ -269,6 +331,26 @@ const Products = () => {
             </Typography>
           </Paper>
         )
+      )}
+
+      {/* Loading overlay for search */}
+      {currentLoading && currentProducts.length > 0 && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: "rgba(255, 255, 255, 0.7)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <CircularProgress size={60} sx={{ color: "#8B4513" }} />
+        </Box>
       )}
     </Box>
   );

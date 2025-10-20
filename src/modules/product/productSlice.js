@@ -17,6 +17,19 @@ export const fetchProducts = createAsyncThunk(
      }
 )
 
+// Search products
+export const searchProducts = createAsyncThunk(
+    "product/searchProducts",
+    async ({ query, page = 0, size = 10 }, { rejectWithValue }) => {
+        try {
+            const res = await axios.get(`${API_BASE}/products/search?query=${encodeURIComponent(query)}&page=${page}&size=${size}`);
+            return res.data; // { success, message, data: { content: [...], totalPages, etc. } }
+        } catch (error) {
+            return rejectWithValue(error.response?.data || { message: "Search products failed" });
+        }
+    }
+)
+
 // Fetch single product by ID
 export const fetchProductById = createAsyncThunk(
     "product/fetchProductById",
@@ -79,6 +92,9 @@ const productSlice = createSlice({
     initialState: {
         products: [], 
         product: null,
+        searchResults: [],
+        isSearching: false,
+        searchQuery: "",
         pageInfo: {
             page: 0,
             totalPages: 0,
@@ -88,7 +104,17 @@ const productSlice = createSlice({
             last: false,
             numberOfElements: 0
         },
+        searchPageInfo: {
+            page: 0,
+            totalPages: 0,
+            totalElements: 0,
+            size: 10,
+            first: true,
+            last: false,
+            numberOfElements: 0
+        },
         loading: false,
+        searchLoading: false,
         updateLoading: false,
         deleteLoading: false,
         error: null,
@@ -103,6 +129,27 @@ const productSlice = createSlice({
         },
         setCurrentPage: (state, action) => {
             state.pageInfo.page = action.payload;
+        },
+        setSearchPage: (state, action) => {
+            state.searchPageInfo.page = action.payload;
+        },
+        clearSearch: (state) => {
+            state.searchResults = [];
+            state.isSearching = false;
+            state.searchQuery = "";
+            state.searchPageInfo = {
+                page: 0,
+                totalPages: 0,
+                totalElements: 0,
+                size: 10,
+                first: true,
+                last: false,
+                numberOfElements: 0
+            };
+        },
+        setSearchQuery: (state, action) => {
+            state.searchQuery = action.payload;
+            state.isSearching = action.payload.length > 0;
         },
         clearMessages: (state) => {
             state.error = null;
@@ -159,7 +206,45 @@ const productSlice = createSlice({
         .addCase(fetchProducts.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload?.message || "Failed to fetch products";
-        }) 
+        })
+        // Search products
+        .addCase(searchProducts.pending, (state) => {
+            state.searchLoading = true;
+            state.error = null;
+        })
+        .addCase(searchProducts.fulfilled, (state, action) => {
+            state.searchLoading = false;
+            const responseData = action.payload.data;
+            
+            // Handle paginated search response structure
+            if (responseData.content) {
+                state.searchResults = responseData.content;
+                state.searchPageInfo = {
+                    page: responseData.number || 0,
+                    totalPages: responseData.totalPages || 0,
+                    totalElements: responseData.totalElements || 0,
+                    size: responseData.size || 10,
+                    first: responseData.first || true,
+                    last: responseData.last || false,
+                    numberOfElements: responseData.numberOfElements || 0
+                };
+            } else if (Array.isArray(responseData)) {
+                state.searchResults = responseData;
+                state.searchPageInfo = {
+                    page: 0,
+                    totalPages: 1,
+                    totalElements: responseData.length,
+                    size: responseData.length,
+                    first: true,
+                    last: true,
+                    numberOfElements: responseData.length
+                };
+            }
+        })
+        .addCase(searchProducts.rejected, (state, action) => {
+            state.searchLoading = false;
+            state.error = action.payload?.message || "Search failed";
+        })
         // Fetch product by ID
         .addCase(fetchProductById.pending, (state) => {
             state.loading = true;   
@@ -243,5 +328,15 @@ const productSlice = createSlice({
     }
 });
 
-export const { clearProduct, setCurrentPage, clearMessages, setSuccessMessage, clearError, clearSuccess } = productSlice.actions;
+export const { 
+    clearProduct, 
+    setCurrentPage, 
+    setSearchPage,
+    clearSearch,
+    setSearchQuery,
+    clearMessages, 
+    setSuccessMessage, 
+    clearError, 
+    clearSuccess 
+} = productSlice.actions;
 export default productSlice.reducer;
