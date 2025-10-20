@@ -360,7 +360,7 @@ const CheckOutPage = () => {
                           fontWeight="bold"
                           sx={{ color: "#8B4513" }}
                         >
-                          £{preview.totalPrice}
+                          £{preview.totalPrice.toFixed(2)}
                         </Typography>
                       </Paper>
                     </Grid>
