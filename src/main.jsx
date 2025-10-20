@@ -3,17 +3,24 @@ import App from "./App";
 import { Provider } from "react-redux";
 
 // Store
-import { store } from "./app/store";
+import { persistor, store } from "./app/store";
 
 // MUI Theme
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import { theme } from "./design/theme";
+
+// Custom Theme
+import { theme } from "./theme/theme";
+
+// Redux Persist
+import { PersistGate } from "redux-persist/integration/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </ThemeProvider>
   </Provider>
 );

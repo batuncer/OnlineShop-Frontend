@@ -1,10 +1,54 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-// Auth Slice
-import authReducer from "../features/auth/authSlice";
+// Slice
+import authReducer from "../modules/auth/authSlice";
+import cartReducer from "../modules/cart/cartSlice";
+import productReducer from "../modules/product/productSlice";
+import orderReducer from "../modules/order/orderSlice";
+import userReducer from "../modules/user/userSlice";
+import supplierReducer from "../modules/supplier/supplierSlice";
+
+// Redux Persist
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+
+// Use local storage
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+
+// Combine reducers
+const rootReducer = combineReducers({
+  auth: authReducer,
+  cart: cartReducer,
+  product: productReducer,
+  order: orderReducer,
+  user: userReducer,
+  supplier: supplierReducer,
+});
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "cart"], // only auth and cart will be persisted
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    auth: authReducer
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
