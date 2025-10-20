@@ -44,7 +44,7 @@ import { deleteOrderById } from "../modules/order/orderSlice";
 import { logout } from "../modules/auth/authSlice";
 
 // Utils
-import formatMonthYear from "../utils/cusTomDate";
+import formatMonthYear from "../utils/customDate";
 
 // Atoms
 import AppButton from "../ui/atoms/AppButton";
